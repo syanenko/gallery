@@ -1,0 +1,485 @@
+html, body {
+	margin: 0;
+	background-image: linear-gradient(rgb(0, 0, 0), rgb(88, 88, 88));
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+	background-color: #000;
+	color: #fff;
+  font-family: Monospace;
+	font-size: 13px;
+	line-height: 24px;
+	overscroll-behavior: none;
+  overflow: hidden;
+}
+
+a {
+	color: rgb(102, 255, 0);
+	text-decoration: underline;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+button {
+	height: 35px;
+        font-size: 15px;
+	background-color: #333;
+        color: #ffac13;
+	cursor: pointer;
+}
+
+a, button, input, select {
+	pointer-events: auto;
+}
+
+.lil-gui {
+	z-index: 2 !important; /* TODO Solve this in HTML */
+}
+
+@media all and ( max-width: 640px ) {
+	.lil-gui.root { 
+		right: auto;
+		top: auto;
+		max-height: 50%;
+		max-width: 80%;
+		bottom: 0;
+		left: 0;
+	}
+}
+
+#overlay {
+	position: absolute;
+	font-size: 16px;
+	z-index: 2;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	background: rgba(0,0,0,0.7);
+}
+
+#overlay button {
+  background: transparent;
+  border: 0;
+  border: 1px solid rgb(255, 255, 255);
+  border-radius: 4px;
+  color: #ffffff;
+  padding: 12px 18px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+#notSupported {
+	width: 50%;
+	margin: auto;
+	background-color: #f00;
+	margin-top: 20px;
+	padding: 10px;
+}
+
+.lil-gui { 
+	--background-color:rgba(20, 20, 20, 0.6);
+	--widget-color: rgba(75, 75, 75, 0.5);
+  --number-color: rgb(102, 189, 30);
+  --widget-height: 20px;
+	--padding: 2px;
+  --font-size: 16px;
+  --input-font-size: 16px;
+}
+
+#logo
+{
+  visibility: hidden;
+  display:block;
+  position: absolute;
+  width:85px;
+  height:85px;
+  top: -10px;
+  left: 0px;
+  cursor: pointer;
+}
+
+#head
+{ 
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  font-size: 185%;
+  font-style: italic;
+  color: #ffac13;
+  cursor: pointer;
+}
+
+#slogan
+{ 
+  position: absolute;
+  top: 35px;
+  left: 20px;
+  font-size: 115%;
+  color: #ffffff;
+  opacity: 0.6;
+  cursor: pointer;
+  font-style: italic;
+}
+
+#line {
+  position:absolute;
+  top:60px;
+  width: 100%;
+}
+
+#name {
+  color: #ffac13;
+  position: absolute;
+  top: 85px;
+  left: 35px;
+  font-size: 145%;
+  font-style: italic;
+}
+
+#description {
+  color: #fff;
+  opacity:0.8;
+  position: absolute;
+  top: 115px;
+  left: 35px;
+  font-size: 130%;
+  font-style: italic;
+}
+
+.nav {
+  display:block;
+  position: absolute;
+  width:36px;
+  color:#ff0000;  
+  opacity:0.6;
+  cursor: pointer;
+}
+
+#prev {
+  bottom: 40px;
+  left: 50px;
+}
+
+#next {
+  bottom: 40px;
+  right: 50px;
+}
+
+#grid_icon
+{
+  top: 14px;
+  right: 10px;
+}
+
+::backdrop {
+  background-image: linear-gradient(
+    rgb(88, 88, 88),
+    rgb(0, 0, 0)
+  );
+  opacity: 0.75;
+}
+
+/* TODO: ~200px for 16:9 */
+/*
+  max-height: 850px;
+  width: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: auto;
+  margin-right: auto;
+*/   
+#image {
+  display: block;
+  margin: auto; 
+  max-width: 100%;
+}
+
+#image_place
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ---------------------------------------------------------------- */
+a {
+	color: #ff0;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+/*
+#logo {
+  top: 3px;
+  left: 10px;
+	width: 100%;
+	padding: 10px;
+	box-sizing: border-box;
+	text-align: left;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+  font-size: 200%;
+  color: #ff9127;
+  z-index: 2;
+  cursor: pointer;
+}
+*/
+a, button, input, select {
+	pointer-events: auto;
+}
+
+@media all and ( max-width: 640px ) {
+	.lil-gui.root { 
+		right: auto;
+		top: auto;
+		max-height: 50%;
+		max-width: 80%;
+		bottom: 0;
+		left: 0;
+	}
+}
+
+#scene_name {
+  position: absolute;
+  top: 10px;
+  right: 52px;
+  color:rgba(255, 255, 255, 0.5);
+  margin: 10px;
+  font-size: 160%;
+}
+
+#gallery_button {
+  position:absolute;
+  top:16px;
+  right:110px;
+  opacity:0.5
+}
+
+#renderer_button {
+  position:absolute;
+  top:11px;
+  right:15px;
+  opacity:0.5
+}
+
+#vr_button{
+  position: absolute;
+  top:18px;
+  right:148px;
+}
+
+#zip {
+  position: absolute;
+  top:18px;
+  right:105px;
+}
+
+
+#video_button {
+  position:absolute;
+  right:56px;
+  top:10px;
+  opacity:0.5
+}
+
+#upload_button {
+  position:absolute;
+  right:7px;
+  top:10px;
+  opacity:0.5
+}
+
+.lil-gui {
+  --background-color:rgba(44, 44, 44, 0.6);
+  --title-background-color:rgba(44, 44, 44, 0.6);
+  --widget-color: rgba(75, 75, 75, 0.7);
+  --number-color: #ff9127;
+  --title-text-color: #ff9127;
+  --text-color: rgb(190, 190, 190);
+  --name-width: 20%;
+  --widget-height: 24px;
+  --slider-knob-width: 5px;
+  --slider-input-width: 60px;
+  --slider-input-min-width: 60x;
+  --font-size: 16px;
+  --input-font-size: 16px;
+  --font-family: Monospace;
+  z-index: 2 !important;
+}
+
+#about
+{
+  width: 600px;
+
+  -moz-box-shadow: 5px 5px 7px #535353;
+  -webkit-box-shadow: 5px 5px 7px #535353;
+  box-shadow: 5px 5px 7px #535353;
+
+  -moz-border-radius: 8px 8px 8px 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px 8px 8px 8px;
+
+  border-width: 0px;
+  font-size: 18px;
+  opacity: 0.7;
+  color:rgb(255, 255, 255);
+  background-color: rgb(0,0,0);
+
+  padding: 20px;
+  padding-top: 30px;
+  padding-left: 40px;
+}
+
+::backdrop {
+  opacity: 0.5;
+}
+
+
+#form_upload {
+  position: absolute;
+  top: calc(50vh - 200px);
+  left: calc(50vw - 100px); 
+  border-radius: 4px;
+  color: #ff9127;
+  background-color:rgba(75, 75, 75, 0.7);
+  font-size: 16px;
+  padding: 30px;
+  padding-top: 20px;
+  padding-left: 40px;
+  visibility: hidden;
+  z-index: 999;
+}
+
+#video {
+  width:1280px;
+  height:720px;
+  position:absolute;
+  top: 130px;
+  left: 8px;
+  z-index:0;
+  visibility:hidden'
+}
+
+#code {
+  resize: none;
+  position: absolute;
+  top: 85px;
+  right: 10px; 
+  width: 605px;
+  height: 860px;
+  direction: ltr;
+  color: #ccc;
+  background:#0a0a0a;
+  font-family: Monospace;
+  font-size: 16px;
+  z-index:2
+}
+
+
+#result
+{
+  position: absolute;
+  top: 130px;
+  left: 8px;
+}
+
+#upload_code
+{
+  visibility: hidden; /* DEBUG: - make icon */
+  font-size: 115%;
+  position:absolute;
+  left:260px;
+  bottom:10px;
+  width:124px;
+  height:34px;
+  z-index:2;
+}
+
+#about_button
+{
+  visibility: hidden;
+
+  font-family: Monospace;
+  font-size: 145%;
+  position:absolute;
+  right:40px;
+  top:15px;
+  background-color:#000;
+  font-style: italic;
+}
+
+#posts
+{
+  position: absolute;
+  top: 100px;
+  width: 100px;
+  right: -10px;
+  padding: 10px;
+  box-sizing: border-box;
+  text-align: center;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#scenes
+{
+  position: absolute;
+  bottom: 6px;
+  left:  210px;
+  padding: 10px;
+  box-sizing: border-box;
+  text-align: center;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Tooltips */
+[data-title] {
+  position: relative;
+  cursor: pointer;
+}
+
+[data-title]:hover::before {
+  content: attr(data-title);
+  position: absolute;
+  bottom: 36px;
+  display: inline-block;
+  padding: 6px 8px;
+  border-radius: 2px;
+  background: #333;
+  color: #aaa;
+  font-size: 12px;
+  font-family: sans-serif;
+  white-space: nowrap;
+}
+
+[data-title]:hover::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 8px;
+  display: inline-block;
+  color: #aaa;
+  border: 8px solid transparent;	
+  border-bottom: 8px solid #000;
+}
