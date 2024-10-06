@@ -1,1 +1,1 @@
-Stereo images and video viewer in XR mode
+Online viewer for stereo images and video in XR mode
