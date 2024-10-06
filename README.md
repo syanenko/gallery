@@ -1,1 +1,1 @@
-# Stereo images and video viewer in XR mode
+Stereo images and video viewer in XR mode
