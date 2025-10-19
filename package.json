@@ -4,6 +4,6 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "dev": "servez -p 8085"
+    "dev": "servez -p 8085 --ssl"
   }
 }
