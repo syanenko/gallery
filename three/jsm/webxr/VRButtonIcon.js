@@ -93,7 +93,7 @@ class VRButtonIcon {
 			element.style.padding = '0';
       element.style.background = 'none';
       element.style.border = 'none';
-      element.innerHTML = "<img src='./data/images/tech/icons/Pictogrammers-Material-Google-cardboard.36.png'/>";
+      element.innerHTML = "<img src='./data/images/tech/icons/cardboard_36x36.png'/>";
 			element.style.zIndex = '999';
 		}
 

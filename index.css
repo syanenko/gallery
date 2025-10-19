@@ -94,26 +94,25 @@ a, button, input, select {
   --input-font-size: 16px;
 }
 
-#logo
-{
-  visibility: hidden;
-  display:block;
-  position: absolute;
-  width:85px;
-  height:85px;
-  top: -10px;
-  left: 0px;
+#logo {
+  display:inline;
+  vertical-align:middle;
+  width:60px;
+  height:60px;
+  padding-left: 10px;
+  padding-right: 10px;
   cursor: pointer;
 }
 
-#head
+#text
 { 
-  position: absolute;
-  top: 15px;
-  left: 20px;
-  font-size: 185%;
+  display:inline;
+  font-size: 180%;
   font-style: italic;
+/*
   color: #ffac13;
+*/
+  color: #cccdce;
   cursor: pointer;
 }
 
@@ -131,7 +130,7 @@ a, button, input, select {
 
 #line {
   position:absolute;
-  top:60px;
+  top:50px;
   width: 100%;
 }
 
