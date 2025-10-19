@@ -1,1 +1,1 @@
-start cmd.exe /k npm_start.bat
+start cmd.exe /k start_server.bat
