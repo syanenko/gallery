@@ -29,9 +29,7 @@ let param_changed = false;
 let geometry1, material1, mesh1;
 let geometry2, material2, mesh2;
 let params = { scale: 1,
-                rotate:  0,
-                picture: 1 };
-
+               rotate:  0 };
 let textureLoader, texLeft, texRight;
 
 function onReset() {
@@ -68,20 +66,17 @@ async function viewScreen(name) {
   scene.background = env;
   scene.backgroundIntensity = 0.4;
 
-  // const loader = new OBJLoader();
-  let object = await AsyncLoader.loadOBJAsync("/data/textures/screen.obj");
-  let model = object.children[0];
-
   // Left
-  geometry1 = model.geometry;
+  geometry1 = new THREE.CylinderGeometry( 5, 5, 5, 512, 512, true ); 
   geometry1.scale( -1, 1, 1 );
   mesh1 = new THREE.Mesh( geometry1, material1 );
-  mesh1.layers.set( 1 ); // Left eye only
+  mesh1.layers.set( 1 );
   scene.add( mesh1 );
+
   // Right
   geometry2 = geometry1.clone();
   mesh2 = new THREE.Mesh( geometry2, material2 );
-  mesh2.layers.set( 2 ); // Right eye only
+  mesh2.layers.set( 2 );
   scene.add( mesh2 );
 
   // Renderer
@@ -123,8 +118,6 @@ async function viewScreen(name) {
                                                                           param_changed = true; });
   gui.add( params, 'rotate',  0, 360, 1 ).name( 'Rotate'  ).onChange( ()=>{ const rad = THREE.MathUtils.degToRad(params.rotate);
                                                                             mesh2.rotation.y = mesh1.rotation.y = -rad; param_changed = true; }); 
-
-  gui.add( params, 'picture',  1, 2, 1 ).name( 'Picture' ).onChange( ()=>{ loadTextures(name); param_changed = true; }); 
 
   gui.add( gui.reset(), 'reset' ).name( 'Reset' ).onChange(onReset);
   gui.open();
@@ -191,10 +184,10 @@ async function viewScreen(name) {
 }
 window.viewScreen = viewScreen;
 
-// Set picture
+// Load textures
 function loadTextures(name) {
   texLeft  = textureLoader.load ('/data/images/' + name + '_left.png');
-  texRight = textureLoader.load('/data/images/' + name + '_left.png');
+  texRight = textureLoader.load('/data/images/' + name + '_right.png');
 
   texLeft.colorSpace = THREE.SRGBColorSpace;
   material1.map = texLeft;
