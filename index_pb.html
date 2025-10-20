@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ODSP</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link type="text/css" rel="stylesheet" href="/pb/main.css">
+  </head>
+  <body>
+    <div id="container"></div>
+<!--
+ODSP (Omni Directional Stereoscopic Panorama) Cylindrical Camera for PovRay
+Written by Paul Bourke
+October 2025
+-->
+		<div class="info">
+      <a href="https://paulbourke.net/stereoscopy/pov_odsp/" target="_blank" rel="noopener">ODSP Cylindrical Camera for PovRay</a><br>
+by Paul Bourke [October 2025]
+		</div>
+
+    <script type="importmap"> { 
+      "imports": { 
+        "three": "/pb/node_modules/three/build/three.module.js",
+        "three/addons/": "/pb/node_modules/three/examples/jsm/",
+        "three/nodes": "/pb/node_modules/three/examples/jsm/nodes/Nodes.js"
+        } 
+    }
+    </script>
+
+    <script type="module">
+/*
+  TODO:
+  - Disable gui interaction in VR what hidden 
+  - Force gui to loos focus when beam is outside the borders
+  - Restore camera matrix on return from VR
+*/
+      import * as THREE from 'three';
+      import { InteractiveGroup } from '/pb/modules/interactive/InteractiveGroup.js';
+      import { HTMLMesh } from '/pb/modules/interactive/HTMLMesh.js';
+      import { GUI } from '/pb/node_modules/lil-gui/dist/lil-gui.esm.min.js';
+      import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+      import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+      import { VRButton } from '/pb/modules/webxr/VRButton.js';
+      import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
+
+      let camera, controls, gui, gui_mesh, scene, renderer, controller;
+      let beam;  
+      const beam_color = 0xffffff;
+      const beam_hilight_color = 0x222222;
+      let param_changed = false;
+
+      let geometry1, material1, mesh1;
+      let geometry2, material2, mesh2;
+      let params = { scale: 1,
+                     rotate:  0,
+                     picture: 1 };
+
+      let textureLoader, texLeft, texRight;
+   
+      function onReset() {
+        controls.reset();
+        param_changed = true; 
+      }
+
+      // Set 
+      function setPicture(picture) {
+        if(picture == 1) {
+          texLeft = textureLoader.load('/pb/tex/left1_s.png');
+          texRight = textureLoader.load('/pb/tex/right1.png');
+        } else {
+          texLeft = textureLoader.load('/pb/tex/left2.png');
+          texRight = textureLoader.load('/pb/tex/right2.png');
+        }
+        texLeft.colorSpace = THREE.SRGBColorSpace;
+        material1.map = texLeft;
+        material1.needsUpdate = true;
+
+        texRight.colorSpace = THREE.SRGBColorSpace;
+        material2.map = texRight;
+        material2.needsUpdate = true;
+      }
+
+      init();
+      function init() {
+        camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 1000 );
+        camera.layers.enable( 1 ); // Render left view when no stereo available
+        camera.position.set(0, 0, 1);
+
+        scene = new THREE.Scene();
+        // Init texture
+        textureLoader = new THREE.TextureLoader();
+        material1 = new THREE.MeshBasicMaterial();
+        material2 = new THREE.MeshBasicMaterial();
+        setPicture(1);
+
+        // Environmant
+        const envPath = "/pb/tex/env/";
+        const env = new THREE.CubeTextureLoader().load([
+          envPath + "px.png",
+          envPath + "nx.png",
+          envPath + "py.png",
+          envPath + "ny.png",
+          envPath + "pz.png",
+          envPath + "nz.png",
+        ]);
+        env.colorSpace = THREE.SRGBColorSpace;
+        scene.background = env;
+        scene.backgroundIntensity = 0.4;
+
+        // scene.background = new THREE.Color().setHex( 0x4f4f4f );
+
+        const loader = new OBJLoader();
+        loader.load( "/pb/screen.obj",
+          function ( object ) {
+            let model = object.children[0];
+
+            // Left
+            geometry1 = model.geometry;
+            geometry1.scale( -1, 1, 1 );
+            mesh1 = new THREE.Mesh( geometry1, material1 );
+            mesh1.layers.set( 1 ); // Left eye only
+            scene.add( mesh1 );
+
+            geometry2 = geometry1.clone();
+            mesh2 = new THREE.Mesh( geometry2, material2 );
+            mesh2.layers.set( 2 ); // Right eye only
+            scene.add( mesh2 );
+          }
+        );
+
+        // Renderer
+        renderer = new THREE.WebGLRenderer();
+        renderer.setPixelRatio( window.devicePixelRatio );
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        renderer.setAnimationLoop( animate );
+        renderer.xr.enabled = true;
+        renderer.xr.setReferenceSpaceType( 'local' );
+        const container = document.getElementById( 'container' );
+        container.appendChild( renderer.domElement );
+
+        // GUI
+        gui = new GUI( {width: 300, title:"Settings", closeFolders:false} );
+        gui.add( params, 'scale', 0.1, 2, 0.01 ).name( 'Scale' ).onChange(()=>{ mesh2.scale.set(params.scale, params.scale, params.scale);
+                                                                                mesh1.scale.set(params.scale, params.scale, params.scale); 
+                                                                                param_changed = true; });
+        gui.add( params, 'rotate',  0, 360, 1 ).name( 'Rotate'  ).onChange( ()=>{ const rad = THREE.MathUtils.degToRad(params.rotate);
+                                                                                  mesh2.rotation.y = mesh1.rotation.y = -rad; param_changed = true; }); 
+
+        gui.add( params, 'picture',  1, 2, 1 ).name( 'Picture' ).onChange( ()=>{ setPicture(params.picture); param_changed = true; }); 
+
+        gui.add( gui.reset(), 'reset' ).name( 'Reset' ).onChange(onReset);
+        gui.open();
+
+        const group = new InteractiveGroup( renderer, camera );
+        scene.add( group );
+
+        // GUI position
+        gui_mesh = new HTMLMesh( gui.domElement );
+        gui_mesh.rotation.x = -Math.PI / 9;
+        gui_mesh.position.y = -0.47;
+        gui_mesh.position.z = -0.6;
+        group.add( gui_mesh );
+        gui_mesh.visible = false;
+
+
+        // Init XR controller
+        controller = renderer.xr.getController( 0 );
+        // Grip 
+        const controllerModelFactory = new XRControllerModelFactory();
+        const controllerGrip1 = renderer.xr.getControllerGrip( 0 );
+        controllerGrip1.add( controllerModelFactory.createControllerModel( controllerGrip1 ) );
+        scene.add( controllerGrip1 );
+
+        // Beam
+        const beam_geom = new THREE.CylinderGeometry( 0.003, 0.005, 1, 4, 1, true);
+        const alpha = textureLoader.load('/pb/tex/beam_alpha.png');
+        const beam_mat = new THREE.MeshStandardMaterial({ transparent: true,
+                                                          alphaMap:alpha,
+                                                          lightMapIntensity:0,
+                                                          opacity: 0.8,
+                                                          color: beam_color,
+                                                          // emissive: 0xffffff
+                                                          alphaTest:0.01
+                                                          });
+        beam = new THREE.Mesh(beam_geom, beam_mat);
+        beam.name = 'beam';
+        beam.receiveShadow = false;
+
+        // Alight beam to grip
+        beam.rotateX(Math.PI / 2);
+        beam.translateY(-0.5);
+        controller.add(beam);
+        scene.add( controller );
+
+        // Hilight controller
+        const light = new THREE.PointLight( 0xffffff, 2, 1, 0);
+        light.position.set( 0, 0, 0 );
+        scene.add( light );
+
+        controller.addEventListener( 'selectstart', onSelectStart );
+        controller.addEventListener( 'selectend', onSelectEnd );
+  
+        // Orbit controls
+        controls = new OrbitControls( camera, renderer.domElement );
+        controls.enableZoom = false;
+        controls.enablePan = false;
+        controls.enableDamping = false;
+        controls.rotateSpeed *= -0.5;
+
+        // VR Button
+        document.body.appendChild( VRButton.createButton( renderer ) );
+        window.addEventListener( 'resize', onWindowResize );
+      }
+
+      //
+      //  Controller events
+      //
+      function onSelectStart( event )
+      {
+        // Hilight beam
+        const controller = event.target;
+        beam = controller.getObjectByName( 'beam' );
+        beam.material.color.set(beam_hilight_color);
+        beam.material.emissive.g = 0.5;
+
+        // TODO: Check it in XRView
+        // param_changed = false;
+      }
+
+      function onSelectEnd( event )
+      {
+        // Unhighlight beam
+        const controller = event.target;
+        beam = controller.getObjectByName( 'beam' );
+        beam.material.color.set(beam_color);
+        beam.material.emissive.g = 0;
+
+        if(param_changed)
+        {
+          param_changed = false;
+          return;
+        }
+
+        gui_mesh.visible = !gui_mesh.visible;
+      }
+
+      function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize( window.innerWidth, window.innerHeight );
+      }
+
+      // XR start 
+      renderer.xr.addEventListener( 'sessionstart', function ( event ) {
+        gui.open();
+        gui_mesh.visible = true;
+      });
+
+      // XR end
+      renderer.xr.addEventListener( 'sessionend', function ( event ) {
+        gui_mesh.visible = false;
+      });
+
+      function animate() {
+        renderer.render( scene, camera );
+      }
+
+    </script>
+  </body>
+</html>

@@ -22,6 +22,14 @@
   </head>
 
   <body>
+  <script type="importmap"> { 
+    "imports": {
+      "three": "/node_modules/three/build/three.module.js",
+      "three/addons/": "/node_modules/three/examples/jsm/",
+      "three/nodes": "/node_modules/three/examples/jsm/nodes/Nodes.js"
+      }
+  }
+  </script> 
 
   <!-- Header --> 
   <div id='header'></div>
@@ -42,11 +50,7 @@
     </form>
   </dialog>
 
-  <dialog id="preview" style="background-color:#FDFFD5">
-    <img id="image" onclick="document.getElementById('preview').close()"></img>
-    <div id='vr_button'></div>
-  </dialog>
-
+  <script type="module" src="./viewScreen.js"></script>
   <script>
     fetch("/header.html")
       .then(response => {
@@ -60,14 +64,15 @@
       document.getElementById("about").showModal();
     }
 
-    function preview(name)
+    // View
+    function view(name, scene)
     {
-      let img = document.getElementById("image");
-      img.setAttribute("src", 'data/images/' + name + '.png');
-      img.style.display = 'block';
-      document.getElementById("preview").showModal();
-      // TODO: Click icons here: screen, scene.
-      window.screenView();
+      // TODO: Display on return
+      document.getElementById("menu").style.display="none";
+      if(scene)
+        window.viewScene(name);
+      else
+        window.viewScreen(name);
     }
   </script>
 
@@ -89,145 +94,26 @@
                                                  onmouseenter="style.opacity = '1.0'" 
                                                  onmouseleave="style.opacity = '0.6'"/>
   -->
-  <script type="module" src="./vrview.js"></script>
 
-  <!-- Selector  -->
-  <script>
-
-    const max_post = 5;
-    var post = 0;
-    const Projection = { FLAT:  0,
-                         VR180: 1,
-                         VR360: 2 };
-    var proj = Projection.FLAT;
-    var images_dir = 'data/images/';
-
-    let img  = document.getElementById("image");
-    let name = document.getElementById("name");
-    let desc = document.getElementById("description");
-    let zip  = document.getElementById("zip");
-    let vr_button  = document.getElementById("vr_button");
-    vr_button.style.visibility = "hidden";
-   
-    // let prev = document.getElementById("prev");
-    // let next = document.getElementById("next");
-    // prev.style.visibility = "hidden";
-    // next.style.visibility = "hidden";
-
-    var images = [];
-    images[0] = "surface_1_cam_0.png";
-    images[1] = "surface_1_cam_1.png";
-    images[2] = "surface_1_cam_2.png";
-    vr_button.style.visibility = "visible";
-
-    // Show post
-    /* 
-    function showPost(p){
-      post = p;
-      switch(p) {
-        case 1:
-          name.innerHTML = 'Surface 1';
-          desc.innerHTML = '(1) z = sin (sqrt (x^2 + y^2)) / (sqrt (x^2 + y^2))';
-          zip.href       = 'data/scenes/scene_1.zip';
-          zip.style.visibility  = "visible";
-          vr_button.style.visibility = "visible";
-          //prev.style.visibility = "visible";
-          //next.style.visibility = "visible";
-          img.setAttribute("src", "data/images/surface_1.png")
-
-          images[0] = "surface_1_cam_0.png";
-          images[1] = "surface_1_cam_1.png";
-          images[2] = "surface_1_cam_2.png";
-          break;
-
-        case 2:
-          name.innerHTML = 'Surface 2';
-          desc.innerHTML = '(2) z = sin (sqrt (x^2 + y^2)) / (sqrt (x^2 + y^2))';
-          zip.href       = 'data/scenes/scene_2.zip';
-          zip.style.visibility = "visible";
-          vr_button.style.visibility = "visible";
-          //prev.style.visibility = "visible";
-          //next.style.visibility = "visible";
-          img.setAttribute("src", "data/images/surface_2.png")
-
-          images[0] = "surface_2_cam_0.png";
-          images[1] = "surface_2_cam_1.png";
-          images[2] = "surface_2_cam_2.png";
-          break;
-
-        case 3:
-          name.innerHTML = 'Surface 3';
-          desc.innerHTML = '(3) z = sin (sqrt (x^2 + y^2)) / (sqrt (x^2 + y^2))';
-          zip.href       = 'data/scenes/scene_3.zip';
-          zip.style.visibility = "visible";
-          vr_button.style.visibility = "visible";
-          //prev.style.visibility = "visible";
-          //next.style.visibility = "visible";
-          img.setAttribute("src", "data/images/surface_3.png")
-
-          images[0] = "surface_3_cam_0.png";
-          images[1] = "surface_3_cam_1.png";
-          images[2] = "surface_3_cam_2.png";
-          break;
-
-        case 4:
-          name.innerHTML = 'Surface 4';
-          desc.innerHTML = '(4) z = sin (sqrt (x^2 + y^2)) / (sqrt (x^2 + y^2))';
-          zip.href       = 'data/scenes/scene_4.zip';
-          zip.style.visibility = "visible";
-          vr_button.style.visibility = "visible";
-          //prev.style.visibility = "visible";
-          //next.style.visibility = "visible";
-          img.setAttribute("src", "data/images/surface_4.png")
-
-          images[0] = "surface_4_cam_0.png";
-          images[1] = "surface_4_cam_1.png";
-          images[2] = "surface_4_cam_2.png";
-          break;
-
-        case 5:
-          name.innerHTML = 'Surface 5';
-          desc.innerHTML = '(5) z = sin (sqrt (x^2 + y^2)) / (sqrt (x^2 + y^2))';
-          zip.href       = 'data/scenes/scene_5.zip';
-          zip.style.visibility = "visible";
-          vr_button.style.visibility = "visible";
-          //prev.style.visibility = "visible";
-          //next.style.visibility = "visible";
-          img.setAttribute("src", "data/images/surface_5.png")
-
-          images[0] = "surface_5_cam_0.png";
-          images[1] = "surface_5_cam_1.png";
-          images[2] = "surface_5_cam_2.png";
-          break;
-      }
-
-      if(images.length == 0) {
-        console.log("vrview[31]: No images to view !");
-      } else {
-        window.screenView();
-      }
-      img.style.display= 'block';
-    }*/
-  </script>
-
+  <div id="container"></div>
   <!-- Menu -->
-  <div id="holder">
-    <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='preview(this.id)'>
-    <img id="surface_2" src="data/images/surface_2.png" alt='link' class='link' onclick='preview(this.id)'>
-    <img id="surface_3" src="data/images/surface_3.png" alt='link' class='link' onclick='preview(this.id)'>
-    <img id="surface_4" src="data/images/surface_4.png" alt='link' class='link' onclick='preview(this.id)'>
-    <img id="surface_5" src="data/images/surface_5.png" alt='link' class='link' onclick='preview(this.id)'>
-    <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='preview(this.id)'>
-    <img id="surface_2" src="data/images/surface_2.png" alt='link' class='link' onclick='preview(this.id)'>
-    <img id="surface_3" src="data/images/surface_3.png" alt='link' class='link' onclick='preview(this.id)'>
-    <img id="surface_4" src="data/images/surface_4.png" alt='link' class='link' onclick='preview(this.id)'>
-    <img id="surface_5" src="data/images/surface_5.png" alt='link' class='link' onclick='preview(this.id)'>
-    <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='preview(this.id)'>
-    <img id="surface_2" src="data/images/surface_2.png" alt='link' class='link' onclick='preview(this.id)'>
-    <img id="surface_3" src="data/images/surface_3.png" alt='link' class='link' onclick='preview(this.id)'>
-    <img id="surface_4" src="data/images/surface_4.png" alt='link' class='link' onclick='preview(this.id)'>
-    <img id="surface_5" src="data/images/surface_5.png" alt='link' class='link' onclick='preview(this.id)'>
-    <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='preview(this.id)'>
+  <div id="menu">
+    <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, false)'>
+    <img id="surface_2" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, false)'>
+    <img id="surface_3" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, false)'>
+    <img id="surface_4" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, false)'>
+    <img id="surface_5" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="surface_2" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="surface_3" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="surface_4" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="surface_5" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="surface_2" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="surface_3" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="surface_4" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="surface_5" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, true)'>
   </div>
 	</body>
 </html>

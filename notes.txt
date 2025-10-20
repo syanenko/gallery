@@ -1,0 +1,3 @@
+-- TODO
+- Panorama and 3D object view right on icon click, then 'Enter VR'.
+- Left, right margins for grid

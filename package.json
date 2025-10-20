@@ -1,9 +1,19 @@
 {
-  "devDependencies": {
-    "servez": "^2.1.4"
-  },
+  "name": "gemview.povlab.onlie",
+  "version": "0.8b",
+  "description": "Online gems rendering",
+  "main": "gemview.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run dev",
-    "dev": "servez -p 8085 --ssl"
+    "dev": "servez --port 8085 --ssl"
+  },
+  "dependencies": {
+    "lil-gui": "^0.19.2",
+    "three": "^0.169.0",
+    "three-mesh-bvh": "^0.8.1"
+  },
+  "devDependencies": {
+    "servez": "^2.1.3"
   }
 }
