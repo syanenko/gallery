@@ -54,6 +54,8 @@ function screenView() {
 
   // XR session start 
   renderer.xr.addEventListener( 'sessionstart', function ( event ) {
+    document.getElementById("preview").close(); 
+
     container = document.createElement( 'div' );
     container.appendChild( renderer.domElement );					
     document.body.appendChild( container );
