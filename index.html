@@ -71,14 +71,14 @@
     }
 
     // View
-    function view(name, scene)
+    function view(name, scene, projection)
     {
       // TODO: Display on return
       document.getElementById("menu").style.display="none";
       if(scene)
         window.viewScene(name);
       else
-        window.viewScreen(name);
+        window.viewScreen(name, projection);
     }
   </script>
 
@@ -102,14 +102,19 @@
   -->
 
   <div id="container"></div>
-  <!-- Menu -->
+  <!-- Menu
+   scene - false
+   screen - true
+   0 - plane
+   1 - cylinder
+  -->
   <div id="menu">
-    <img id="odsp1"     src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, false)'>
-    <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, false)'>
-    <img id="surface_2" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, false)'>
-    <img id="surface_3" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, false)'>
-    <img id="surface_4" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, false)'>
-    <img id="surface_5" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="odsp1"     src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, false, 1)'>
+    <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, false, 0)'>
+    <img id="surface_2" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, false, 0)'>
+    <img id="surface_3" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, false, 0)'>
+    <img id="surface_4" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, false, 0)'>
+    <img id="surface_5" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, false, 0)'>
     <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, true)'>
     <img id="surface_2" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, true)'>
     <img id="surface_3" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, true)'>

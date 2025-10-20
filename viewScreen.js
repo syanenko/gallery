@@ -40,7 +40,7 @@ function onReset() {
 //
 // View on screen
 //
-async function viewScreen(name) {
+async function viewScreen(name, projection) {
   camera = new THREE.PerspectiveCamera( FOV, window.innerWidth / window.innerHeight, 0.1, 1000 );
   camera.layers.enable(1); // Render left view when no stereo available
   camera.position.set(0, 0, 1);
@@ -48,11 +48,12 @@ async function viewScreen(name) {
   scene = new THREE.Scene();
   // Init texture
   textureLoader = new THREE.TextureLoader();
-  material1 = new THREE.MeshBasicMaterial();
-  material2 = new THREE.MeshBasicMaterial();
+  material1 = new THREE.MeshBasicMaterial({side: THREE.DoubleSide});
+  material2 = new THREE.MeshBasicMaterial({side: THREE.DoubleSide});
   loadTextures(name);
 
   // Environmant
+  /*
   const envPath = "/data/textures/env/";
   const env = new THREE.CubeTextureLoader().load([
     envPath + "px.png",
@@ -64,19 +65,31 @@ async function viewScreen(name) {
   ]);
   env.colorSpace = THREE.SRGBColorSpace;
   scene.background = env;
+  // scene.background = new THREE.Color().setRGB( 0.5, 0.5, 0 );
   scene.backgroundIntensity = 0.4;
+  */
+
+  switch(projection) {
+    case 0: geometry1 = new THREE.PlaneGeometry( 2, 2 ); break;
+    case 1: geometry1 = new THREE.CylinderGeometry( 5, 5, 5, 512, 512, true );  break;
+  }
 
   // Left
-  geometry1 = new THREE.CylinderGeometry( 5, 5, 5, 512, 512, true ); 
   geometry1.scale( -1, 1, 1 );
   mesh1 = new THREE.Mesh( geometry1, material1 );
   mesh1.layers.set( 1 );
+  mesh1.rotation.y = THREE.MathUtils.degToRad(180);
+  if(projection == 0)
+    mesh1.position.set(0, 0, -1)
   scene.add( mesh1 );
 
   // Right
   geometry2 = geometry1.clone();
   mesh2 = new THREE.Mesh( geometry2, material2 );
   mesh2.layers.set( 2 );
+  mesh2.rotation.y = THREE.MathUtils.degToRad(180);
+  if(projection == 0)
+    mesh2.position.set(0, 0, -1)
   scene.add( mesh2 );
 
   // Renderer
@@ -186,7 +199,7 @@ window.viewScreen = viewScreen;
 
 // Load textures
 function loadTextures(name) {
-  texLeft  = textureLoader.load ('/data/images/' + name + '_left.png');
+  texLeft  = textureLoader.load('/data/images/' + name + '_left.png');
   texRight = textureLoader.load('/data/images/' + name + '_right.png');
 
   texLeft.colorSpace = THREE.SRGBColorSpace;
