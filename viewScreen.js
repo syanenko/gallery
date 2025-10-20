@@ -43,7 +43,6 @@ function onReset() {
 // View on screen
 //
 async function viewScreen(name) {
-  console.log(name);  
   camera = new THREE.PerspectiveCamera( FOV, window.innerWidth / window.innerHeight, 0.1, 1000 );
   camera.layers.enable(1); // Render left view when no stereo available
   camera.position.set(0, 0, 1);
@@ -53,7 +52,7 @@ async function viewScreen(name) {
   textureLoader = new THREE.TextureLoader();
   material1 = new THREE.MeshBasicMaterial();
   material2 = new THREE.MeshBasicMaterial();
-  setPicture(1);
+  loadTextures(name);
 
   // Environmant
   const envPath = "/data/textures/env/";
@@ -125,7 +124,7 @@ async function viewScreen(name) {
   gui.add( params, 'rotate',  0, 360, 1 ).name( 'Rotate'  ).onChange( ()=>{ const rad = THREE.MathUtils.degToRad(params.rotate);
                                                                             mesh2.rotation.y = mesh1.rotation.y = -rad; param_changed = true; }); 
 
-  gui.add( params, 'picture',  1, 2, 1 ).name( 'Picture' ).onChange( ()=>{ setPicture(params.picture); param_changed = true; }); 
+  gui.add( params, 'picture',  1, 2, 1 ).name( 'Picture' ).onChange( ()=>{ loadTextures(name); param_changed = true; }); 
 
   gui.add( gui.reset(), 'reset' ).name( 'Reset' ).onChange(onReset);
   gui.open();
@@ -193,14 +192,10 @@ async function viewScreen(name) {
 window.viewScreen = viewScreen;
 
 // Set picture
-function setPicture(picture) {
-  if(picture == 1) {
-    texLeft = textureLoader.load  ('/data/images/odsp_left1_s.png');
-    texRight = textureLoader.load('/data/images/odsp_right1.png');
-  } else {
-    texLeft = textureLoader.load('/data/images/odsp_left2.png');
-    texRight = textureLoader.load('/data/images/odsp_right2.png');
-  }
+function loadTextures(name) {
+  texLeft  = textureLoader.load ('/data/images/' + name + '_left.png');
+  texRight = textureLoader.load('/data/images/' + name + '_left.png');
+
   texLeft.colorSpace = THREE.SRGBColorSpace;
   material1.map = texLeft;
   material1.needsUpdate = true;

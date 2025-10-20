@@ -50,6 +50,12 @@
     </form>
   </dialog>
 
+  <!-- TODO: Make preview for flat screen (?) -->
+  <dialog id="preview" style="background-color:#FDFFD5">
+    <img id="image" onclick="document.getElementById('preview').close()"></img>
+    <div id='vr_button'></div>
+  </dialog>
+
   <script type="module" src="./viewScreen.js"></script>
   <script>
     fetch("/header.html")
@@ -98,6 +104,7 @@
   <div id="container"></div>
   <!-- Menu -->
   <div id="menu">
+    <img id="odsp1"     src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, false)'>
     <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, false)'>
     <img id="surface_2" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, false)'>
     <img id="surface_3" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, false)'>
