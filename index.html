@@ -69,35 +69,9 @@
     }
   </script>
 
-  <!-- Name hidden --> 
+  <!-- Name, description hidden --> 
   <div id="name" style="display:none"></div>
-  <!-- Description hidden --> 
   <div id="description" style="display:none"></div>
- 
-  <input id="renderer_button" type="image" src="./data/icons/terminal_FILL0_wght300_GRAD0_opsz48.png", style='z-index:2'/>
-  <script>
-    gb = document.getElementById("renderer_button");
-    gb.onmouseenter = function () {
-      gb.style.opacity = '1.0';
-    };
-
-    gb.onmouseleave = function () {
-      gb.style.opacity = '0.5';
-    };
-
-    gb.onclick = function () {
-      window.location = "https://povlab.online";
-    };
-  </script>
-
-
-  <!-- Download -->
-  <a id="zip" download >
-    <img id="zip_icon" class="nav" src="./data/icons/outline_file_download_white_36dp.png"
-                       onmouseenter="style.opacity = '1.0'"
-                       onmouseleave="style.opacity = '0.6'"
-                       alt="Download"/>
-  </a>
 
   <!-- VRButton -->
   <div id='vr_button'></div>
