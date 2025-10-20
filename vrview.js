@@ -30,7 +30,7 @@ const parameters = {
 //
 // Main
 //
-function vrView() {
+function screenView() {
   // Scene
   scene = new THREE.Scene();
 
@@ -308,4 +308,4 @@ function onSelectEnd( event )
 }
 
 // Make run() global
-window.vrView = vrView;
+window.screenView = screenView;

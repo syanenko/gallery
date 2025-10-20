@@ -186,16 +186,6 @@ a, button, input, select {
   opacity: 0.75;
 }
 
-/* TODO: ~200px for 16:9 */
-/*
-  max-height: 850px;
-  width: auto;
-  margin-top: auto;
-  margin-bottom: auto;
-  margin-left: auto;
-  margin-right: auto;
-*/
-
 #image {
   display: none;
   max-width: 100%;
