@@ -1,6 +1,9 @@
+//
 // TODO
 //
 // - Restore camera position on XR exit
+// - XR: Scale, rotate screen by controller (like in studio)
+//
 //
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -53,7 +56,7 @@ async function viewScreen(name) {
   setPicture(1);
 
   // Environmant
-  const envPath = "./tex/env/";
+  const envPath = "/data/textures/env/";
   const env = new THREE.CubeTextureLoader().load([
     envPath + "px.png",
     envPath + "nx.png",
@@ -67,7 +70,7 @@ async function viewScreen(name) {
   scene.backgroundIntensity = 0.4;
 
   // const loader = new OBJLoader();
-  let object = await AsyncLoader.loadOBJAsync("./tex/screen.obj");
+  let object = await AsyncLoader.loadOBJAsync("/data/textures/screen.obj");
   let model = object.children[0];
 
   // Left
@@ -149,7 +152,7 @@ async function viewScreen(name) {
 
   // Beam
   const beam_geom = new THREE.CylinderGeometry( 0.003, 0.005, 1, 4, 1, true);
-  const alpha = textureLoader.load('/tex/beam_alpha.png');
+  const alpha = textureLoader.load('/data/textures/beam_alpha.png');
   const beam_mat = new THREE.MeshStandardMaterial({ transparent: true,
                                                     alphaMap:alpha,
                                                     lightMapIntensity:0,
@@ -192,11 +195,11 @@ window.viewScreen = viewScreen;
 // Set picture
 function setPicture(picture) {
   if(picture == 1) {
-    texLeft = textureLoader.load('./tex/left1_s.png');
-    texRight = textureLoader.load('./tex/right1.png');
+    texLeft = textureLoader.load  ('/data/images/odsp_left1_s.png');
+    texRight = textureLoader.load('/data/images/odsp_right1.png');
   } else {
-    texLeft = textureLoader.load('./tex/left2.png');
-    texRight = textureLoader.load('./tex/right2.png');
+    texLeft = textureLoader.load('/data/images/odsp_left2.png');
+    texRight = textureLoader.load('/data/images/odsp_right2.png');
   }
   texLeft.colorSpace = THREE.SRGBColorSpace;
   material1.map = texLeft;
