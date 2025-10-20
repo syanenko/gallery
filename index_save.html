@@ -13,8 +13,7 @@
     <title>Gallery</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-
-<!-- Caching -->  
+    <!-- Caching -->  
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="expires" content="timestamp">
 
@@ -26,26 +25,6 @@
   <!-- Header --> 
   <div id='header'></div>
   <!-- Insert header -->
-  
-  <dialog id="about">
-    <br>
-    <div style="font-size: 24px; position:absolute; left:50px; color: #ffac13;">POV-Lab</div>
-    <br><br>
-    <a href="https://povray.org" target="_blank">POV-Ray</a> scenes was rendered by <a href="https://wiki.povray.org/content/User:Le_Forgeron" target="_blank">HgPovray</a> with stereo camera and can be viewed in VR by selecting mask icon it low left corner. Download scene source by selecting download icon.</p>
-    <p>Following tutorials are available online:
-    <a href="https://povlab.online/povtutorial/" target="_blank">Basics</a>,
-    <a href="https://povlab.online/animtutorial/" target="_blank">Animation</a>,
-    <a href="https://povlab.online/isotutorial/" target="_blank">Isosurfaces</a>.</p>
-    <p style='text-align:right'>Contacts: <a href='mailto:syanenko65@gmain.com'>Email</a> / <a href="https://www.linkedin.com/in/sergey-yanenko-57b21a96/" target="_blank">LinkedIn</a>&nbsp;&nbsp;</p>
-    <form method="dialog" style="text-align:center">
-      <button style='width:100px'>OK</button>
-    </form>
-  </dialog>
-
-  <dialog id="preview">
-    <img id="image" onclick="document.getElementById('preview').close()"></img>
-  </dialog>
-
   <script>
     fetch("/header.html")
       .then(response => {
@@ -58,22 +37,17 @@
     {
       document.getElementById("about").showModal();
     }
-
-    function showPreview(src)
-    { 
-      let img = document.getElementById("image");
-      img.setAttribute("src", src.getAttribute("src"));
-      img.style.display = 'block';
-      console.log(img);
-      document.getElementById("preview").showModal();
-    }
   </script>
 
-  <!-- Name hidden --> 
-  <div id="name" style="display:none"></div>
-  <!-- Description hidden --> 
-  <div id="description" style="display:none"></div>
- 
+  <!-- Name --> 
+  <div id="name"></div>
+
+  <!-- Image -->
+  <div id="image_place"><img id='image'></img></div>
+
+  <!-- Description --> 
+  <div id="description"></div>
+
   <input id="renderer_button" type="image" src="./data/icons/terminal_FILL0_wght300_GRAD0_opsz48.png", style='z-index:2'/>
   <script>
     gb = document.getElementById("renderer_button");
@@ -114,7 +88,7 @@
                                                  onmouseleave="style.opacity = '0.6'"/>
   <script type="module" src="./vrview.js"></script>
 
-  <!-- Selector  -->
+  <!-- Selector -->
   <script>
     const max_post = 5;
     var post = 0;
@@ -139,7 +113,6 @@
     var images = [];
 
     // Show post
-    
     function showPost(p){
       post = p;
       switch(p) {
@@ -166,7 +139,7 @@
           vr_button.style.visibility = "visible";
           //prev.style.visibility = "visible";
           //next.style.visibility = "visible";
-          img.setAttribute("src", "data/images/surface_2.png")
+          img.setAttribute("src", "./data/images/surface_2.png")
 
           images[0] = "surface_2_cam_0.png";
           images[1] = "surface_2_cam_1.png";
@@ -181,11 +154,11 @@
           vr_button.style.visibility = "visible";
           //prev.style.visibility = "visible";
           //next.style.visibility = "visible";
-          img.setAttribute("src", "data/images/surface_3.png")
+          img.setAttribute("src", "data/images/posts/surface_3.png")
 
-          images[0] = "surface_3_cam_0.png";
-          images[1] = "surface_3_cam_1.png";
-          images[2] = "surface_3_cam_2.png";
+          images[0] = "posts/surface_3_cam_0.png";
+          images[1] = "posts/surface_3_cam_1.png";
+          images[2] = "posts/surface_3_cam_2.png";
           break;
 
         case 4:
@@ -196,11 +169,11 @@
           vr_button.style.visibility = "visible";
           //prev.style.visibility = "visible";
           //next.style.visibility = "visible";
-          img.setAttribute("src", "data/images/surface_4.png")
+          img.setAttribute("src", "data/images/posts/surface_4.png")
 
-          images[0] = "surface_4_cam_0.png";
-          images[1] = "surface_4_cam_1.png";
-          images[2] = "surface_4_cam_2.png";
+          images[0] = "posts/surface_4_cam_0.png";
+          images[1] = "posts/surface_4_cam_1.png";
+          images[2] = "posts/surface_4_cam_2.png";
           break;
 
         case 5:
@@ -211,33 +184,37 @@
           vr_button.style.visibility = "visible";
           //prev.style.visibility = "visible";
           //next.style.visibility = "visible";
-          img.setAttribute("src", "data/images/surface_5.png")
+          img.setAttribute("src", "data/images/posts/surface_5.png")
 
-          images[0] = "surface_5_cam_0.png";
-          images[1] = "surface_5_cam_1.png";
-          images[2] = "surface_5_cam_2.png";
+          images[0] = "posts/surface_5_cam_0.png";
+          images[1] = "posts/surface_5_cam_1.png";
+          images[2] = "posts/surface_5_cam_2.png";
           break;
       }
-
+      
       if(images.length == 0) {
         console.log("vrview[31]: No images to view !");
       } else {
         window.vrView();
       }
-      img.style.display= 'block';
     }
+
+
+  </script>
+
+  <script>
+    // Initial view
+    setTimeout(()=>showPost(1), 500);
   </script>
 
   <!-- Menu -->
-  <div style='position: absolute; top:75px; left:20px; width:1920px; height:225; z-index:4;'>
-    <img src="data/images/surface_1.png" alt='link' class='link' onclick='showPreview(this)'>
-    <img src="data/images/surface_2.png" alt='link' class='link' onclick='showPreview(this)'>
-    <img src="data/images/surface_3.png" alt='link' class='link' onclick='showPreview(this)'>
-    <img src="data/images/surface_4.png" alt='link' class='link' onclick='showPreview(this)'>
-    <img src="data/images/surface_5.png" alt='link' class='link' onclick='showPreview(this)'>
-    <img src="data/images/surface_1.png" alt='link' class='link' onclick='showPreview(this)'>
-    <img src="data/images/surface_2.png" alt='link' class='link' onclick='showPreview(this)'>
-    <img src="data/images/surface_3.png" alt='link' class='link' onclick='showPreview(this)'>
+  <div id="posts">
+    <button onclick="showPost(1)">1</button><br>
+    <button onclick="showPost(2)">2</button><br>
+    <button onclick="showPost(3)">3</button><br>
+    <button onclick="showPost(4)">4</button><br>
+    <button onclick="showPost(5)">5</button>
   </div>
+
 	</body>
 </html>

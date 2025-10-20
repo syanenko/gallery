@@ -194,18 +194,20 @@ a, button, input, select {
   margin-bottom: auto;
   margin-left: auto;
   margin-right: auto;
-*/   
+*/
+
 #image {
-  display: block;
+  display: none;
   margin: auto; 
   max-width: 100%;
-}
-
-#image_place
-{
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  z-index:999;
+  width: 800px;
+/*
+  border:10px solid #FDFFD5;
+  border-width: 9px;
+  border-radius: 10px;
+  box-shadow: rgb(90, 90, 90) 7px 7px 7px;
+*/
 }
 
 /* ---------------------------------------------------------------- */
@@ -318,7 +320,7 @@ a, button, input, select {
   z-index: 2 !important;
 }
 
-#about
+dialog
 {
   width: 600px;
 
@@ -481,4 +483,15 @@ a, button, input, select {
   color: #aaa;
   border: 8px solid transparent;	
   border-bottom: 8px solid #000;
+}
+
+.link {
+  cursor: pointer;
+  width: 200px;
+  position: relative;
+  margin: 14px;
+  border:10px solid #FDFFD5;
+  border-width: 9px;
+  border-radius: 10px;
+  box-shadow: rgb(90, 90, 90) 7px 7px 7px;
 }

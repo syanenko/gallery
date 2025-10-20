@@ -253,7 +253,7 @@ function initController()
 
   // Alpha
   const textureLoader = new THREE.TextureLoader();
-  const alpha = textureLoader.load('./data/images/textures/beam_alpha.png');
+  const alpha = textureLoader.load('./data/textures/beam_alpha.png');
   const beam_mat = new THREE.MeshStandardMaterial({ transparent: true,
                                                     alphaMap:alpha,
                                                     lightMapIntensity:0,
