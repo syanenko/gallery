@@ -413,7 +413,6 @@ dialog
 #about_button
 {
   visibility: hidden;
-
   font-family: Monospace;
   font-size: 145%;
   position:absolute;
@@ -491,9 +490,22 @@ dialog
   cursor: pointer;
   width: 200px;
   position: relative;
-  margin: 14px;
   border:10px solid #FDFFD5;
   border-width: 9px;
   border-radius: 10px;
   box-shadow: rgb(90, 90, 90) 7px 7px 7px;
+}
+
+#holder {
+  width: 100%;
+  position: absolute;
+  top:75px;
+
+  z-index:4;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive columns */
+  gap: 30px; /* Spacing between grid items */
+  justify-items: center; /* Centers items horizontally within their grid cells */
+  align-items: center; /* Centers items vertically within their grid cells */
 }
