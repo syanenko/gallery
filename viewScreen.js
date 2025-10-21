@@ -24,7 +24,7 @@ window.Type = Type;
 const Proj = Object.freeze({
   FLAT: 0,
   CYLINDER: 1,
-  VT180 : 2,
+  VR180: 2,
   VR360: 3
 });
 window.Proj = Proj;
@@ -84,27 +84,44 @@ async function viewScreen(name, proj) {
   scene.backgroundIntensity = 0.4;
   */
 
+/*
+  radius — sphere radius. Default is 1.
+  widthSegments — number of horizontal segments. Minimum value is 3, and the default is 32.
+  heightSegments — number of vertical segments. Minimum value is 2, and the default is 16.
+  phiStart — specify horizontal starting angle. Default is 0.
+  phiLength — specify horizontal sweep angle size. Default is Math.PI * 2.
+  thetaStart — specify vertical starting angle. Default is 0.
+  thetaLength — specify vertical sweep angle size. Default is Math.PI.
+*/
   switch(proj) {
-    case Proj.FLAT: geometry1 = new THREE.PlaneGeometry( 2, 2 ); break;
-    case Proj.CYLINDER: geometry1 = new THREE.CylinderGeometry( 5, 5, 5, 512, 512, true );  break;
+    case Proj.FLAT: geometry1 = new THREE.PlaneGeometry( 2, 2 );
+         break;
+    case Proj.CYLINDER: geometry1 = new THREE.CylinderGeometry( 5, 5, 5, 512, 512, true );
+         break;
+    case Proj.VR180: geometry1 = new THREE.SphereGeometry( 1, 64, 64, 0, Math.PI );
+         break;
+    case Proj.VR360: geometry1 = new THREE.SphereGeometry( 1, 64, 64, 0, Math.PI * 2 );
+         break;
   }
 
   // Left
   geometry1.scale( -1, 1, 1 );
   mesh1 = new THREE.Mesh( geometry1, material1 );
   mesh1.layers.set( 1 );
-  mesh1.rotation.y = THREE.MathUtils.degToRad(180);
-  if(proj == Proj.FLAT)
+  mesh1.rotation.y = Math.PI;
+  if(proj == Proj.FLAT) {
     mesh1.position.set(0, 0, -1)
+  }
   scene.add( mesh1 );
 
   // Right
   geometry2 = geometry1.clone();
   mesh2 = new THREE.Mesh( geometry2, material2 );
   mesh2.layers.set( 2 );
-  mesh2.rotation.y = THREE.MathUtils.degToRad(180);
-  if(proj == Proj.FLAT)
+  mesh2.rotation.y = Math.PI;
+  if(proj == Proj.FLAT) {
     mesh2.position.set(0, 0, -1)
+  }
   scene.add( mesh2 );
 
   // Renderer
