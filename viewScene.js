@@ -1,7 +1,9 @@
 // TODO
 // - Total cleanup on getting back to menu
 // - Normilize models
+// - Set FlatShading in userData
 // - Set position (y,z), GUI ranges, env. in userData (?)
+// - Set FlatShading in userData
 // - Ring as here: C:\xampp\htdocs\jview\main.js 
 //
 import * as THREE from 'three';
@@ -51,7 +53,7 @@ const params = {
   anz: false,
   switch_any: function() { params.any = !params.any;
                            let color = params.any ? "#00ff00" : "#ff9127";
-                           gui.controllers[1].$name.style.color = color;
+                           gui.controllers[3].$name.style.color = color;
                            param_changed = true; },
   speed: -0.001 }
 
@@ -385,7 +387,8 @@ function onReset()
   // params.any = true;
   // gui.controllers[1].$name.style.color = "#00ff00";
   params.any = false;
-  gui.controllers[1].$name.style.color = "#ff9127";
+  gui.controllers[3].$name.style.color = "#ff9127";
+  gui.controllers[5].$name.style.color = "#ff9127";
 
   if (model) {
     const euler = new THREE.Euler( 0, 20, 0, 'XYZ' );
