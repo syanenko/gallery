@@ -13,14 +13,14 @@ import { GUI } from '/node_modules/lil-gui/dist/lil-gui.esm.min.js';
 import { XRControllerModelFactory } from '/modules/webxr/XRControllerModelFactory.js';
 import { VRButton } from '/modules/webxr/VRButton.js';
 
-// View type
+// View types
 const Type = Object.freeze({
   IMAGE: 0,
   SCENE: 1
 });
 window.Type = Type;
 
-// Projections
+// Projection types
 const Proj = Object.freeze({
   FLAT: 0,
   CYLINDER: 1,
@@ -55,7 +55,7 @@ function onReset() {
 //
 // View on screen
 //
-async function viewScreen(name, projection) {
+async function viewScreen(name, proj) {
   camera = new THREE.PerspectiveCamera( FOV, window.innerWidth / window.innerHeight, 0.1, 1000 );
   camera.layers.enable(1); // Render left view when no stereo available
   camera.position.set(0, 0, 1);
@@ -84,9 +84,9 @@ async function viewScreen(name, projection) {
   scene.backgroundIntensity = 0.4;
   */
 
-  switch(projection) {
-    case 0: geometry1 = new THREE.PlaneGeometry( 2, 2 ); break;
-    case 1: geometry1 = new THREE.CylinderGeometry( 5, 5, 5, 512, 512, true );  break;
+  switch(proj) {
+    case Proj.FLAT: geometry1 = new THREE.PlaneGeometry( 2, 2 ); break;
+    case Proj.CYLINDER: geometry1 = new THREE.CylinderGeometry( 5, 5, 5, 512, 512, true );  break;
   }
 
   // Left
@@ -94,7 +94,7 @@ async function viewScreen(name, projection) {
   mesh1 = new THREE.Mesh( geometry1, material1 );
   mesh1.layers.set( 1 );
   mesh1.rotation.y = THREE.MathUtils.degToRad(180);
-  if(projection == 0)
+  if(proj == Proj.FLAT)
     mesh1.position.set(0, 0, -1)
   scene.add( mesh1 );
 
@@ -103,7 +103,7 @@ async function viewScreen(name, projection) {
   mesh2 = new THREE.Mesh( geometry2, material2 );
   mesh2.layers.set( 2 );
   mesh2.rotation.y = THREE.MathUtils.degToRad(180);
-  if(projection == 0)
+  if(proj == Proj.FLAT)
     mesh2.position.set(0, 0, -1)
   scene.add( mesh2 );
 
