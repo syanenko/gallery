@@ -55,7 +55,7 @@ function onReset() {
 //
 // View on screen
 //
-async function viewScreen(name, proj) {
+async function viewImage(name, proj) {
   camera = new THREE.PerspectiveCamera( FOV, window.innerWidth / window.innerHeight, 0.1, 1000 );
   camera.layers.enable(1); // Render left view when no stereo available
   camera.position.set(0, 0, 1);
@@ -227,7 +227,7 @@ async function viewScreen(name, proj) {
   document.body.appendChild( VRButton.createButton( renderer ) );
   window.addEventListener( 'resize', onWindowResize );
 }
-window.viewScreen = viewScreen;
+window.viewImage = viewImage;
 
 // Load textures
 function loadTextures(name) {

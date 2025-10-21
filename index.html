@@ -58,7 +58,7 @@
     <div id='vr_button'></div>
   </dialog>
 
-  <script type="module" src="./viewScreen.js"></script>
+  <script type="module" src="./viewImage.js"></script>
   <script type="module" src="./viewScene.js"></script>
 
   <script>
@@ -80,7 +80,7 @@
 
       switch(type) {
         case Type.IMAGE:
-          viewScreen(name, projection); break;
+          viewImage(name, projection); break;
         case Type.SCENE:
           viewScene(name); break;
         default:
