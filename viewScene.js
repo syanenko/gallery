@@ -1,6 +1,7 @@
 // TODO
 // - Total cleanup on getting back to menu
-// - Set position (y,z), GUI ranges, env. in userData
+// - Normilize models
+// - Set position (y,z), GUI ranges, env. in userData (?)
 // - Ring as here: C:\xampp\htdocs\jview\main.js 
 //
 import * as THREE from 'three';

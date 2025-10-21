@@ -69,20 +69,23 @@
         document.getElementById('header').innerHTML = data;
       });
 
-    function about()
-    {
+    function about() {
       document.getElementById("about").showModal();
     }
 
     // View
-    function view(name, scene, projection)
-    {
+    function view(name, type, projection) {
       // TODO: Display on return
       document.getElementById("menu").style.display="none";
-      if(scene)
-        viewScene(name);
-      else
-        viewScreen(name, projection);
+
+      switch(type) {
+        case Type.IMAGE:
+          viewScreen(name, projection); break;
+        case Type.SCENE:
+          viewScene(name); break;
+        default:
+          console.error("Unknown view type");
+      }
     }
   </script>
 
@@ -106,37 +109,30 @@
   -->
 
   <div id="container"></div>
-  <!-- Menu
-   scene - false
-   screen - true
-   0 - plane
-   1 - cylinder
-  -->
   <div id="menu">
-    <img id="Mars_Rover" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="Cassini-Huygens" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="Deep_Space" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="Ingenuity_Mars_Helicopter" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="Viking_Lander" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.FLAT)'>
+    <img id="Mars_Rover" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
 
-    <img id="odsp1"     src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, false, 1)'>
-    <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, false, 0)'>
-    <img id="surface_2" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, false, 0)'>
-    <img id="surface_3" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, false, 0)'>
-    <img id="surface_4" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, false, 0)'>
-    <img id="surface_5" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, false, 0)'>
-    <img id="flora"     src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="oakcup"    src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="Cassini-Huygens" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
+    <img id="Deep_Space" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
+    <img id="Ingenuity_Mars_Helicopter" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
+    <img id="Viking_Lander" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
+    <img id="odsp1"     src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.CYLINDER)'>
+    <img id="surface_2" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.FLAT)'>
+    <img id="surface_3" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.FLAT)'>
+    <img id="surface_4" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.FLAT)'>
+    <img id="surface_5" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.FLAT)'>
+    <img id="flora"     src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
+    <img id="oakcup"    src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
 
-
-    <img id="ring_0" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="ring_2" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="ring_3" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="ring_4" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="ring_5" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="surface_4" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="surface_5" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="ring_0" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
+    <img id="ring_2" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
+    <img id="ring_3" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
+    <img id="ring_4" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
+    <img id="ring_5" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
+    <img id="surface_4" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.FLAT)'>
+    <img id="surface_5" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.FLAT)'>
+    <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.FLAT)'>
   </div>
 	</body>
 </html>

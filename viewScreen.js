@@ -13,6 +13,22 @@ import { GUI } from '/node_modules/lil-gui/dist/lil-gui.esm.min.js';
 import { XRControllerModelFactory } from '/modules/webxr/XRControllerModelFactory.js';
 import { VRButton } from '/modules/webxr/VRButton.js';
 
+// View type
+const Type = Object.freeze({
+  IMAGE: 0,
+  SCENE: 1
+});
+window.Type = Type;
+
+// Projections
+const Proj = Object.freeze({
+  FLAT: 0,
+  CYLINDER: 1,
+  VT180 : 2,
+  VR360: 3
+});
+window.Proj = Proj;
+
 let camera, cpmatrix;
 let cpos = new THREE.Vector3();
 let crot = new THREE.Quaternion();
