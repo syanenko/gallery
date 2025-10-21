@@ -18,10 +18,10 @@ const loadingManager = new THREE.LoadingManager();
 loadingManager.onStart = function (url, loaded, total) {
   // console.log('Loading process has started!');
   // Display it on upload button click
-  // progressContainer.style.display = 'flex';
+  progressContainer.style.display = 'flex';
 
-  // progress.value = 0;
-  // progressLabel.innerHTML = "Parsing...";
+  progress.value = 0;
+  progressLabel.innerHTML = "Parsing...";
 };
 
 loadingManager.onProgress = function (url, loaded, total) {
@@ -30,12 +30,12 @@ loadingManager.onProgress = function (url, loaded, total) {
   number of items loaded: ${loaded}
   total number of items: ${total} `);
 */
-  // progress.value = (loaded / total) * 100;
+  progress.value = (loaded / total) * 100;
 };
 
 loadingManager.onLoad = function () {
   //console.log('Loading process has been completed!');
-  // progressContainer.style.display = 'none';
+  progressContainer.style.display = 'none';
 };
 
 loadingManager.onError = function (url) {

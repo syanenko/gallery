@@ -1,0 +1,420 @@
+// TODO
+// - Total cleanup on getting back to menu
+// - Set position (y,z), GUI ranges, env. in userData
+// - Ring as here: C:\xampp\htdocs\jview\main.js 
+//
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js"
+import { VRButton } from '/modules/webxr/VRButton.js';
+import { InteractiveGroup } from '/modules/interactive/InteractiveGroup.js';
+import { HTMLMesh } from '/modules/interactive/HTMLMesh.js';
+import { GUI } from '/node_modules/lil-gui/dist/lil-gui.esm.min.js';
+import { XRControllerModelFactory } from '/modules/webxr/XRControllerModelFactory.js';
+
+const MODEL_PATH = 'data/models/';
+
+let container;
+let camera, cpmatrix, scene, renderer;
+let cpos = new THREE.Vector3();
+let crot = new THREE.Quaternion();
+
+const FOV = 50;
+let textureLoader;
+let gui, gui_mesh;
+let param_changed = false;
+
+let beam;
+const beam_color = 0xffffff;
+const beam_hilight_color = 0x222222;
+
+let controls;
+let controller;
+let directionalLight, pointLight, ambientLight;
+
+let model;
+const help = true;
+
+// GUI
+const params = {
+  scale: 1.5,
+  x:     0,
+  y:    -2,
+  z:    -7,
+  rx:    0,
+  ry:    0,
+  rz:    0,
+  anx: false,
+  any: false,
+  anz: false,
+  switch_any: function() { params.any = !params.any;
+                           let color = params.any ? "#00ff00" : "#ff9127";
+                           gui.controllers[1].$name.style.color = color;
+                           param_changed = true; },
+  speed: -0.001 }
+
+// View scene
+function viewScene(name) {
+  name += '.glb';
+  camera = new THREE.PerspectiveCamera( FOV, window.innerWidth / window.innerHeight, 0.1, 1100 );
+  camera.position.set( 0, 100, 300);
+
+  scene = new THREE.Scene();
+  scene.add( camera );
+
+  // Environmant
+/*
+  const envPath = "/data/textures/env/";
+  const env = new THREE.CubeTextureLoader().load([
+    envPath + "px.png",
+    envPath + "nx.png",
+    envPath + "py.png",
+    envPath + "ny.png",
+    envPath + "pz.png",
+    envPath + "nz.png",
+  ]);
+  env.colorSpace = THREE.SRGBColorSpace;
+  scene.background = env;
+  scene.backgroundIntensity = 0.4;
+
+  // scene.background = new THREE.Color().setRGB( 0.5, 0.5, 0 );
+*/
+
+
+  renderer = new THREE.WebGLRenderer({ antialias: true, maxSamples: 4, alpha: true });
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.setAnimationLoop( render );
+  
+  // XR
+  renderer.xr.enabled = true;
+  renderer.xr.setReferenceSpaceType( 'local' );
+  renderer.xr.setFramebufferScaleFactor( 4.0 );
+
+  renderer.xr.addEventListener( 'sessionstart', function ( event ) {
+    cpmatrix = camera.projectionMatrix.clone();
+    cpos.copy(camera.position);
+    crot.copy(camera.quaternion);
+
+    renderer.setClearColor(new THREE.Color(0x000), 1);
+    gui_mesh.visible = true;
+  });
+
+  renderer.xr.addEventListener( 'sessionend', function ( event ) {
+    camera.projectionMatrix.copy(cpmatrix);
+    camera.position.copy(cpos);
+    camera.quaternion.copy(crot);
+    camera.fov = FOV;
+
+    renderer.setClearColor(new THREE.Color(0x000), 0);
+    gui_mesh.visible = false;
+  });
+
+  container = document.getElementById("container");
+  container.appendChild( renderer.domElement );
+
+  // Loader
+  textureLoader = new THREE.TextureLoader();
+
+  initLights();
+  initControls();
+  initGUI();  
+  initController();
+  loadModel(name);
+
+  let vrb = VRButton.createButton( renderer );
+  //vrb.style.setProperty('position', 'absolute');
+  //vrb.style.setProperty('top', '10px');
+  document.body.appendChild( vrb );
+
+  displayAxis(true);
+}
+window.viewScene = viewScene;
+
+// Load model
+export function loadModel(name)
+{
+  const draco = new DRACOLoader()
+  draco.setDecoderPath("/node_modules/three/examples/jsm/libs/draco/")
+  const loader = new GLTFLoader();
+  loader.setPath( MODEL_PATH );
+  loader.setDRACOLoader(draco);
+  loader.load( name, async function ( gltf ) {
+    model = gltf.scene;
+    await renderer.compileAsync( model, camera, scene );
+    model.name='model';
+
+    // TODO: Travers all meshes (as studio)
+    // var obj = scene.getObjectByName( 'Hill' );
+    // obj.geometry.computeBoundingSphere();
+    // model.position.set(0, 0, -obj.geometry.boundingSphere.radius * 1.5)
+
+    model.position.set(0, -2, -7)
+    scene.add( model );
+    // gui.reset();
+  });
+}
+window.loadModel = loadModel;
+
+// Init orbit controlls
+function initControls()
+{
+  controls = new OrbitControls( camera, renderer.domElement );
+  controls.target.set( params.x, params.y, params.z );
+  controls.enablePan = true;
+  controls.enableDamping = false;
+  // Fix rotation to Y axis
+  // controls.minPolarAngle=controls.maxPolarAngle=1.57079
+}
+
+// Init lights
+function initLights()
+{
+/*
+  ambientLight = new THREE.AmbientLight( 0xffffff, 0.5  );
+  scene.add( ambientLight );
+*/
+  // pointLight = new THREE.PointLight( 0xffffff, 180 );
+  // pointLight.position.set( 50, 150, 0);
+  // scene.add( pointLight );
+
+  // directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+  // directionalLight.position.set( 40, 120, 200);
+  // scene.add( directionalLight );
+
+  directionalLight = new THREE.DirectionalLight( 0xffffff, 4 );
+  directionalLight.position.set( 200, 80, 20);
+  scene.add( directionalLight );
+
+  directionalLight = new THREE.DirectionalLight( 0xffffff, 4 );
+  directionalLight.position.set( -200, 80, 20);
+  scene.add( directionalLight );
+
+  // Hilight controller
+  const light = new THREE.PointLight( 0xffffff, 4, 0, 0);
+  light.position.set( 40, 50, 20 );
+  //scene.add( light );
+}
+
+// Init GUI
+function initGUI()
+{
+  // GUI
+  gui = new GUI( {width: 300, title:"Settings", closeFolders:true} ); // Check 'closeFolders' - not working
+  //gui.add( params, 'scale', 0.1, 5.0, 0.01 ).name( 'Scale' ).onChange(onScale);
+  //gui.add( params, 'x', -500, 500, 0.01 ).name( 'X' ).onChange(onX);
+  gui.add( params, 'y', -3, 3, 0.01 ).name( 'Height' ).onChange(onY);
+  gui.add( params, 'z', -20, 0, 0.01 ).name( 'Distance' ).onChange(onZ);
+  //gui.add( params, 'rx', -Math.PI, Math.PI, 0.01 ).name( 'Rot X' ).onChange( onRotation );
+  //gui.add( params, 'ry', -Math.PI, Math.PI, 0.01 ).name( 'Rotate' ).onChange( onRotation );
+  //gui.add( params, 'rz', -Math.PI, Math.PI, 0.01 ).name( 'Rot Z' ).onChange( onRotation );
+  //gui.add( params, 'anx').hide();
+  gui.add( params, 'any').hide();
+  //gui.add( params, 'anz').hide();
+  //gui.add( params, 'switch_anx').name( 'Rotate X' );
+  gui.add( params, 'switch_any').name( 'Rotate' );
+  //gui.add( params, 'switch_anz').name( 'Rotate Z' );
+  gui.add( params, 'speed', -0.004, 0.004, 0.001 ).name( 'Speed' ).onChange( ()=>{param_changed = true;} );
+  gui.add( gui.reset(), 'reset' ).name( 'Reset' ).onChange(onReset); onReset();
+
+  const group = new InteractiveGroup( renderer, camera );
+  scene.add( group );
+
+  // GUI position
+  gui_mesh = new HTMLMesh( gui.domElement );
+  gui_mesh.rotation.x = -Math.PI / 9;
+  gui_mesh.position.y = -0.36;
+  gui_mesh.position.z = -0.6;
+  
+  group.add( gui_mesh );
+  gui_mesh.visible = false;
+
+  params.switch_any();
+}
+
+//
+// Display axis
+//
+let arrow_helper_x;
+let arrow_helper_y;
+let arrow_helper_z;
+let axis_o = new THREE.Vector3(0,0,0);
+let axis_x = new THREE.Vector3(1,0,0);
+let axis_y = new THREE.Vector3(0,1,0);
+let axis_z = new THREE.Vector3(0,0,1);
+let axis_len = 10;
+async function displayAxis(checked) {
+  if(checked) {
+    arrow_helper_x = new THREE.ArrowHelper(axis_x, axis_o, axis_len, 'crimson');
+    arrow_helper_y = new THREE.ArrowHelper(axis_y, axis_o, axis_len, 'green');
+    arrow_helper_z = new THREE.ArrowHelper(axis_z, axis_o, axis_len, 'royalblue');
+    scene.add( arrow_helper_x );
+    scene.add( arrow_helper_y );
+    scene.add( arrow_helper_z );
+  }
+  else {
+   if(arrow_helper_x) {
+    scene.remove( arrow_helper_x );
+    arrow_helper_x.dispose(); }
+
+   if(arrow_helper_y) {
+    scene.remove( arrow_helper_y );
+    arrow_helper_y.dispose(); }
+
+   if(arrow_helper_z) {
+    scene.remove( arrow_helper_z );
+    arrow_helper_z.dispose(); }
+  }
+}
+
+
+// Init controller
+function initController()
+{
+  controller = renderer.xr.getController( 0 );
+
+  // Grip 
+  const controllerModelFactory = new XRControllerModelFactory();
+  const controllerGrip1 = renderer.xr.getControllerGrip( 0 );
+  controllerGrip1.add( controllerModelFactory.createControllerModel( controllerGrip1 ) );
+  scene.add( controllerGrip1 );
+
+  // Beam
+  const beam_geom = new THREE.CylinderGeometry( 0.003, 0.005, 1, 4, 1, true);
+  const alpha = textureLoader.load('data/textures/beam_alpha.png');
+  const beam_mat = new THREE.MeshStandardMaterial({ transparent: true,
+                                                    alphaMap:alpha,
+                                                    lightMapIntensity:0,
+                                                    opacity: 0.8,
+                                                    color: beam_color,
+                                                    // emissive: 0xffffff
+                                                    alphaTest:0.01
+                                                    });
+  beam = new THREE.Mesh(beam_geom, beam_mat);
+  beam.name = 'beam';
+  beam.receiveShadow = false;
+
+  // Alight beam to grip
+  beam.rotateX(Math.PI / 2);
+  beam.translateY(-0.5);
+  controller.add(beam);
+  scene.add( controller );
+
+  controller.addEventListener( 'selectstart', onSelectStart );
+  controller.addEventListener( 'selectend', onSelectEnd );
+
+  window.addEventListener( 'resize', onWindowResize );
+}
+
+//
+//  Controller events
+//
+function onSelectStart( event )
+{
+  // Hilight beam
+  const controller = event.target;
+  let beam = controller.getObjectByName( 'beam' );
+  beam.material.color.set(beam_hilight_color);
+  beam.material.emissive.g = 0.5;
+
+  param_changed = false;
+}
+
+function onSelectEnd( event )
+{
+  // Dehilight beam
+  const controller = event.target;
+  beam = controller.getObjectByName( 'beam' );
+  beam.material.color.set(beam_color);
+  beam.material.emissive.g = 0;
+
+  if(param_changed)
+  {
+    param_changed = false;
+    return;
+  }
+
+  gui_mesh.visible = !gui_mesh.visible;
+}
+
+//
+// GUI changes
+//
+function onScale() {
+  if (typeof model == "undefined") { return; }
+  model.scale.setScalar( params.scale );
+  param_changed = true;
+}
+
+function onX() {
+  if (typeof model == "undefined") { return; }
+  model.position.setX( params.x );
+  param_changed = true;
+}
+
+function onY() {
+  if (typeof model == "undefined") { return; }
+  model.position.setY( params.y );
+  param_changed = true;
+}
+
+function onZ() {
+  if (typeof model == "undefined") { return; }
+  model.position.setZ( params.z );
+  param_changed = true;
+}
+
+function onRotation()
+{
+  if (typeof model == "undefined") { return; }
+  const euler = new THREE.Euler( params.rx, params.ry, params.rz, 'XYZ' );
+  model.setRotationFromEuler(euler);
+  param_changed = true;
+}
+
+function onReset()
+{
+  controls.reset();
+  controls.target.set( params.x, params.y, params.z );
+  // controls.enablePan = true;
+  // controls.enableDamping = false;
+
+  // Y-rotation
+  // params.any = true;
+  // gui.controllers[1].$name.style.color = "#00ff00";
+  params.any = false;
+  gui.controllers[1].$name.style.color = "#ff9127";
+
+  if (model) {
+    const euler = new THREE.Euler( 0, 20, 0, 'XYZ' );
+    model.setRotationFromEuler(euler);
+  }
+}
+
+// Resize
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+// Render
+function render() {
+  if (typeof model == "undefined") { return; }
+  controls.update();
+
+  if (params.anx) {
+    model.rotateX(params.speed);
+  }
+
+  if (params.any) {
+    model.rotateY(params.speed);
+  }
+
+  if (params.anz) {
+    model.rotateZ(params.speed);
+  }
+
+  renderer.render( scene, camera );
+}

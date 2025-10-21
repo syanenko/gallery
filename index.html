@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Google tag (gtag.js) -->
+    <!-- Google tag (gtag.js)
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-90TCG4QQ5H"></script>
+
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-90TCG4QQ5H');
     </script>
+    -->
 
     <title>Gallery</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
-<!-- Caching -->  
+    <!-- Caching -->  
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="expires" content="timestamp">
 
@@ -57,6 +59,8 @@
   </dialog>
 
   <script type="module" src="./viewScreen.js"></script>
+  <script type="module" src="./viewScene.js"></script>
+
   <script>
     fetch("/header.html")
       .then(response => {
@@ -76,9 +80,9 @@
       // TODO: Display on return
       document.getElementById("menu").style.display="none";
       if(scene)
-        window.viewScene(name);
+        viewScene(name);
       else
-        window.viewScreen(name, projection);
+        viewScreen(name, projection);
     }
   </script>
 
@@ -109,20 +113,27 @@
    1 - cylinder
   -->
   <div id="menu">
+    <img id="Mars_Rover" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="Cassini-Huygens" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="Deep_Space" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="Ingenuity_Mars_Helicopter" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="Viking_Lander" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, true)'>
+
     <img id="odsp1"     src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, false, 1)'>
     <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, false, 0)'>
     <img id="surface_2" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, false, 0)'>
     <img id="surface_3" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, false, 0)'>
     <img id="surface_4" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, false, 0)'>
     <img id="surface_5" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, false, 0)'>
-    <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="surface_2" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="surface_3" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="surface_4" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="surface_5" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="surface_2" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, true)'>
-    <img id="surface_3" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="flora"     src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="oakcup"    src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, true)'>
+
+
+    <img id="ring_0" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="ring_2" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="ring_3" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="ring_4" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, true)'>
+    <img id="ring_5" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, true)'>
     <img id="surface_4" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, true)'>
     <img id="surface_5" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, true)'>
     <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, true)'>

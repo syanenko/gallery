@@ -7,7 +7,6 @@
 //
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { AsyncLoader } from '/modules/AsyncLoader.js';
 import { HTMLMesh } from '/modules/interactive/HTMLMesh.js';
 import { InteractiveGroup } from '/modules/interactive/InteractiveGroup.js';
 import { GUI } from '/node_modules/lil-gui/dist/lil-gui.esm.min.js';
