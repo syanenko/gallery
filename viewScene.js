@@ -148,7 +148,7 @@ export function loadModel(name)
     await renderer.compileAsync( model, camera, scene );
     model.name='model';
 
-    // TODO: Travers all meshes (as studio)
+    // TODO: Noprmalize by travers all meshes (as studio) ...
     // var obj = scene.getObjectByName( 'Hill' );
     // obj.geometry.computeBoundingSphere();
     // model.position.set(0, 0, -obj.geometry.boundingSphere.radius * 1.5)
@@ -234,6 +234,7 @@ function initGUI()
   gui_mesh.visible = false;
 
   params.switch_any();
+  gui.close(); // Collapse by default
 }
 
 //
@@ -247,6 +248,7 @@ let axis_x = new THREE.Vector3(1,0,0);
 let axis_y = new THREE.Vector3(0,1,0);
 let axis_z = new THREE.Vector3(0,0,1);
 let axis_len = 10;
+
 async function displayAxis(checked) {
   if(checked) {
     arrow_helper_x = new THREE.ArrowHelper(axis_x, axis_o, axis_len, 'crimson');
@@ -391,7 +393,7 @@ function onReset()
   gui.controllers[5].$name.style.color = "#ff9127";
 
   if (model) {
-    const euler = new THREE.Euler( 0, 20, 0, 'XYZ' );
+    const euler = new THREE.Euler( 0, 0, 0, 'XYZ' );
     model.setRotationFromEuler(euler);
   }
 }

@@ -177,7 +177,7 @@ async function viewImage(name, proj) {
   gui_mesh.position.z = -0.6;
   group.add( gui_mesh );
   gui_mesh.visible = false;
-
+  gui.close(); // Collapse by default
 
   // Init XR controller
   controller = renderer.xr.getController( 0 );
