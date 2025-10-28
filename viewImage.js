@@ -189,7 +189,7 @@ async function viewImage(name, proj) {
 
   // Beam
   const beam_geom = new THREE.CylinderGeometry( 0.003, 0.005, 1, 4, 1, true);
-  const alpha = textureLoader.load('/data/textures/beam_alpha.png');
+  const alpha = textureLoader.load('./data/textures/beam_alpha.png');
   const beam_mat = new THREE.MeshStandardMaterial({ transparent: true,
                                                     alphaMap:alpha,
                                                     lightMapIntensity:0,
@@ -231,8 +231,8 @@ window.viewImage = viewImage;
 
 // Load textures
 function loadTextures(name) {
-  texLeft  = textureLoader.load('/data/images/' + name + '_left.png');
-  texRight = textureLoader.load('/data/images/' + name + '_right.png');
+  texLeft  = textureLoader.load('./data/images/' + name + '_left.png');
+  texRight = textureLoader.load('./data/images/' + name + '_right.png');
 
   texLeft.colorSpace = THREE.SRGBColorSpace;
   material1.map = texLeft;
