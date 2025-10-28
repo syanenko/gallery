@@ -471,6 +471,9 @@ dialog
 }
 
 .link {
+	margin-top: 10px; /* Temp */
+  margin-left: 10px; /* Temp */
+
   cursor: pointer;
   width: 200px;
   position: relative;

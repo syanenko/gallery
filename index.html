@@ -80,7 +80,7 @@
     // View
     function view(name, type, projection) {
       // TODO: Display on return
-      document.getElementById("menu").style.display="none";
+      document.getElementById("__menu").style.display="none";
 
       switch(type) {
         case Type.IMAGE:
@@ -113,7 +113,12 @@
   -->
 
   <div id="container"></div>
-  <div id="menu">
+  <div id="__menu">
+    <img id="flora"     src="data/images/flora_icon.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
+    <img id="oak_leaf"  src="data/images/oak_leaf_icon.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
+<!--
+    <img id="odsp1"     src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.CYLINDER)'>
+
     <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.VR180)'>
     <img id="surface_2" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.VR360)'>
     <img id="surface_3" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.FLAT)'>
@@ -126,15 +131,12 @@
     <img id="Ingenuity_Mars_Helicopter" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
     <img id="Viking_Lander" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
 
-    <img id="odsp1"     src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.CYLINDER)'>
-    <img id="flora"     src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
-    <img id="oakcup"    src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
-
     <img id="ring_0" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
     <img id="ring_2" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
     <img id="ring_3" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
     <img id="ring_4" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
     <img id="gearbox5st" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
+-->
   </div>
 	</body>
 </html>

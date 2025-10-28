@@ -1,6 +1,6 @@
 // TODO
 // - Total cleanup on getting back to menu
-// - Normilize models
+// - Normalize models
 // - Set FlatShading in userData
 // - Set position (y,z), GUI ranges, env. in userData (?)
 // - Set FlatShading in userData
@@ -131,7 +131,7 @@ function viewScene(name) {
   //vrb.style.setProperty('top', '10px');
   document.body.appendChild( vrb );
 
-  displayAxis(true);
+  // displayAxis(true);
 }
 window.viewScene = viewScene;
 

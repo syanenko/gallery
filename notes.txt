@@ -1,3 +1,5 @@
 -- TODO
-- Panorama and 3D object view right on icon click, then 'Enter VR'.
+- Properly close renderer, cleanup scene, get back to menu
+- Get back on mouse click 
 - Left, right margins for grid
+-
