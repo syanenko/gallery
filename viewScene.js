@@ -55,7 +55,7 @@ let params = {
                            let color = params.any ? "#00ff00" : "#ff9127";
                            gui.controllers[3].$name.style.color = color;
                            param_changed = true; },
-  speed: -0.001 }
+  speed: -0.003 }
 
 // View scene
 function viewScene(name, matFlat) {
@@ -234,7 +234,7 @@ function initGUI()
   group.add( gui_mesh );
   gui_mesh.visible = false;
 
-  // params.switch_any(); // By default
+  params.switch_any(); // By default
   gui.close(); // Collapse by default
 }
 
