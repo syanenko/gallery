@@ -132,11 +132,15 @@ function viewScene(name, matFlat) {
   // Loader
   textureLoader = new THREE.TextureLoader();
 
-  // initLights(); // TODO: Set lights in GLB
   initControls();
   initGUI();  
   initController();
   loadModel(name, matFlat);
+
+  // Hilight controller
+  const light = new THREE.PointLight( 0xffffff, 4, 0, 0);
+  light.position.set( 40, 50, 20 );
+  scene.add( light );
 
   let vrb = VRButton.createButton( renderer );
   //vrb.style.setProperty('position', 'absolute');
@@ -173,7 +177,7 @@ export function loadModel(name, matFlat)
         } else if (node instanceof THREE.Light) {
           node.target.position.set(0,0,0);
           scene.add(node.target);
-          scene.add( new THREE.DirectionalLightHelper( node, 5 ) );
+          // scene.add( new THREE.DirectionalLightHelper( node, 5 ) ); // DEBUG
         }
     });
     bb.getBoundingSphere(bs);
@@ -195,36 +199,6 @@ function initControls()
   controls.enableDamping = false;
   // Fix rotation to Y axis
   // controls.minPolarAngle=controls.maxPolarAngle=1.57079
-}
-
-// Init lights
-function initLights()
-{
-
-/*
-  ambientLight = new THREE.AmbientLight( 0xffffff, 0.5  );
-  scene.add( ambientLight );
-*/
-  // pointLight = new THREE.PointLight( 0xffffff, 180 );
-  // pointLight.position.set( 50, 150, 0);
-  // scene.add( pointLight );
-
-  // directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
-  // directionalLight.position.set( 40, 120, 200);
-  // scene.add( directionalLight );
-
-  directionalLight = new THREE.DirectionalLight( 0xffffff, 4 );
-  directionalLight.position.set( 200, 80, 20);
-  scene.add( directionalLight );
-
-  directionalLight = new THREE.DirectionalLight( 0xffffff, 4 );
-  directionalLight.position.set( -200, 80, 20);
-  scene.add( directionalLight );
-
-  // Hilight controller
-  const light = new THREE.PointLight( 0xffffff, 4, 0, 0);
-  light.position.set( 40, 50, 20 );
-  //scene.add( light );
 }
 
 // Init GUI
