@@ -38,6 +38,7 @@ let directionalLight, pointLight, ambientLight;
 
 let model;
 const help = true;
+let animation = [];
 
 // GUI
 let params = {
@@ -174,12 +175,17 @@ export function loadModel(name, matFlat)
             bb.expandByObject(node);
             node.material.flatShading = matFlat;
             node.material.needsUpdate = matFlat;
+            // Store animation on object
+            console.log(node.userData.animate);
+            if(node.userData.animate != undefined)
+              animation.push(node);
         } else if (node instanceof THREE.Light) {
           node.target.position.set(0,0,0);
           scene.add(node.target);
           // scene.add( new THREE.DirectionalLightHelper( node, 5 ) ); // DEBUG
         }
     });
+
     bb.getBoundingSphere(bs);
     const s = 1 / bs.radius;
     model.scale.set(s, s, s);
@@ -234,7 +240,7 @@ function initGUI()
   group.add( gui_mesh );
   gui_mesh.visible = false;
 
-  params.switch_any(); // By default
+  // params.switch_any(); // By default
   gui.close(); // Collapse by default
 }
 
@@ -422,6 +428,16 @@ function render() {
   if (params.anz) {
     model.rotateZ(params.speed);
   }
+
+  // Animate
+  for(let i=0; i<animation.length; i++) {
+    // console.log(animation[i].userData.animate.rotate.z);
+    animation[i].rotation.z += parseFloat(animation[i].userData.animate.rotate.z);
+    animation[i].rotation.z %= ( 2 * Math.PI);
+  }
+
+  //console.log(animation[0].userData.animate.rotate.y); // DEBUG
+  //console.log(animation[1].userData.animate.rotate.y); // DEBUG
 
   renderer.render( scene, camera );
 }
