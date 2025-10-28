@@ -79,7 +79,7 @@
     }
 
     // View
-    function view(name, type, projection) {
+    function view(name, type, projection, matFlat) {
       // TODO: Display on return
       document.getElementById("__menu").style.display="none";
 
@@ -87,7 +87,7 @@
         case Type.IMAGE:
           viewImage(name, projection); break;
         case Type.SCENE:
-          viewScene(name); break;
+          viewScene(name, matFlat); break;
         default:
           console.error("Unknown view type");
       }
@@ -115,9 +115,13 @@
 
   <div id="container"></div>
   <div id="__menu">
-    <img id="flora"     src="data/images/flora_icon.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
-    <img id="oak_leaf"  src="data/images/oak_leaf_icon.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
+    <img id="flora"     src="data/images/flora_icon.png" alt='link' class='link' onclick='view(this.id, Type.SCENE, undefined, false)'>
+    <img id="oak_leaf"  src="data/images/oak_leaf_icon.png" alt='link' class='link' onclick='view(this.id, Type.SCENE, undefined, false)'>
+    <img id="gears"     src="data/images/oak_leaf_icon.png" alt='link' class='link' onclick='view(this.id, Type.SCENE, undefined, false)'>
 <!--
+    <img id="gearbox5st"  src="data/images/oak_leaf_icon.png" alt='link' class='link' onclick='view(this.id, Type.SCENE, undefined, true)'>
+    <img id="sack"  src="data/images/oak_leaf_icon.png" alt='link' class='link' onclick='view(this.id, Type.SCENE, undefined, true)'>
+
     <img id="odsp1"     src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.CYLINDER)'>
 
     <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.VR180)'>

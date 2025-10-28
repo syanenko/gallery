@@ -1,4 +1,5 @@
 -- TODO
+- Fix reset in XR (set to 0 ?)
 - Properly close renderer, cleanup scene, get back to menu
 - Get back on mouse click 
 - Left, right margins for grid

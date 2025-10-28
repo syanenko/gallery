@@ -40,11 +40,11 @@ let model;
 const help = true;
 
 // GUI
-const params = {
+let params = {
   scale: 1.5,
   x:     0,
-  y:  -0.5,
-  z:    -2,
+  y:     0,
+  z:     0,
   rx:    0,
   ry:    0,
   rz:    0,
@@ -58,7 +58,7 @@ const params = {
   speed: -0.001 }
 
 // View scene
-function viewScene(name) {
+function viewScene(name, matFlat) {
   name += '.glb';
   camera = new THREE.PerspectiveCamera( FOV, window.innerWidth / window.innerHeight, 0.1, 1100 );
   camera.position.set( 0, 0.7, 2);
@@ -100,7 +100,12 @@ function viewScene(name) {
     cpos.copy(camera.position);
     crot.copy(camera.quaternion);
 
+    params.y = -0.5,
+    params.z = -2,
     model.position.set(0, params.y, params.z)
+    
+    for (var i in gui.controllers)
+      gui.controllers[i].updateDisplay();
 
     renderer.setClearColor(new THREE.Color(0x000), 1);
     gui.open();
@@ -113,7 +118,9 @@ function viewScene(name) {
     camera.quaternion.copy(crot);
     camera.fov = FOV;
 
-    model.position.set(0, 0, 0);
+    params.y = 0,
+    params.z = 0,
+    model.position.set(0, params.y, params.z)
 
     renderer.setClearColor(new THREE.Color(0x000), 0);
     gui_mesh.visible = false;
@@ -125,11 +132,11 @@ function viewScene(name) {
   // Loader
   textureLoader = new THREE.TextureLoader();
 
-  initLights();
+  // initLights(); // TODO: Set lights in GLB
   initControls();
   initGUI();  
   initController();
-  loadModel(name);
+  loadModel(name, matFlat);
 
   let vrb = VRButton.createButton( renderer );
   //vrb.style.setProperty('position', 'absolute');
@@ -141,7 +148,7 @@ function viewScene(name) {
 window.viewScene = viewScene;
 
 // Load model
-export function loadModel(name)
+export function loadModel(name, matFlat)
 {
   const draco = new DRACOLoader()
   draco.setDecoderPath("/node_modules/three/examples/jsm/libs/draco/")
@@ -156,28 +163,34 @@ export function loadModel(name)
     // Normalize model's scale
     let bb = new THREE.Box3();
     let bs = new THREE.Sphere();
+    let first = true; // DEBUG
     model.traverse(function(node) {
         if (node instanceof THREE.Mesh) {
             // console.log("Found mesh:", node.name);
             bb.expandByObject(node);
+            node.material.flatShading = matFlat;
+            node.material.needsUpdate = matFlat;
+        } else if (node instanceof THREE.Light) {
+          node.target.position.set(0,0,0);
+          scene.add(node.target);
+          scene.add( new THREE.DirectionalLightHelper( node, 5 ) );
         }
     });
     bb.getBoundingSphere(bs);
-    // console.log("R:", bs.radius);
     const s = 1 / bs.radius;
     model.scale.set(s, s, s);
 
     scene.add( model );
+    // console.log(model);
     // gui.reset();
   });
 }
-window.loadModel = loadModel;
 
 // Init orbit controlls
 function initControls()
 {
   controls = new OrbitControls( camera, renderer.domElement );
-  // controls.target.set( 0, 0, 0 );
+  controls.target.set( 0, 0, 0 );
   controls.enablePan = false;
   controls.enableDamping = false;
   // Fix rotation to Y axis
@@ -187,6 +200,7 @@ function initControls()
 // Init lights
 function initLights()
 {
+
 /*
   ambientLight = new THREE.AmbientLight( 0xffffff, 0.5  );
   scene.add( ambientLight );
@@ -246,7 +260,7 @@ function initGUI()
   group.add( gui_mesh );
   gui_mesh.visible = false;
 
-  params.switch_any();
+  // params.switch_any(); // By default
   gui.close(); // Collapse by default
 }
 
