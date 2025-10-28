@@ -43,8 +43,8 @@ const help = true;
 const params = {
   scale: 1.5,
   x:     0,
-  y:     0,
-  z:     0,
+  y:  -0.5,
+  z:    -2,
   rx:    0,
   ry:    0,
   rz:    0,
@@ -100,10 +100,11 @@ function viewScene(name) {
     cpos.copy(camera.position);
     crot.copy(camera.quaternion);
 
-    model.position.set(0, -0.5, -2)
+    model.position.set(0, params.y, params.z)
 
     renderer.setClearColor(new THREE.Color(0x000), 1);
-    gui_mesh.visible = true;
+    gui.open();
+    // gui_mesh.visible = true;
   });
 
   renderer.xr.addEventListener( 'sessionend', function ( event ) {
@@ -176,7 +177,7 @@ window.loadModel = loadModel;
 function initControls()
 {
   controls = new OrbitControls( camera, renderer.domElement );
-  controls.target.set( params.x, params.y, params.z );
+  // controls.target.set( 0, 0, 0 );
   controls.enablePan = false;
   controls.enableDamping = false;
   // Fix rotation to Y axis
@@ -219,8 +220,8 @@ function initGUI()
   gui = new GUI( {width: 300, title:"Settings", closeFolders:true} ); // Check 'closeFolders' - not working
   //gui.add( params, 'scale', 0.1, 5.0, 0.01 ).name( 'Scale' ).onChange(onScale);
   //gui.add( params, 'x', -500, 500, 0.01 ).name( 'X' ).onChange(onX);
-  gui.add( params, 'y', -3, 3, 0.01 ).name( 'Height' ).onChange(onY);
-  gui.add( params, 'z', -20, 0, 0.01 ).name( 'Distance' ).onChange(onZ);
+  gui.add( params, 'y', -1, 0, 0.01 ).name( 'Height' ).onChange(onY);
+  gui.add( params, 'z', -3, -1, 0.01 ).name( 'Distance' ).onChange(onZ);
   //gui.add( params, 'rx', -Math.PI, Math.PI, 0.01 ).name( 'Rot X' ).onChange( onRotation );
   //gui.add( params, 'ry', -Math.PI, Math.PI, 0.01 ).name( 'Rotate' ).onChange( onRotation );
   //gui.add( params, 'rz', -Math.PI, Math.PI, 0.01 ).name( 'Rot Z' ).onChange( onRotation );
