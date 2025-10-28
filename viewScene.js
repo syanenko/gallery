@@ -61,7 +61,7 @@ const params = {
 function viewScene(name) {
   name += '.glb';
   camera = new THREE.PerspectiveCamera( FOV, window.innerWidth / window.innerHeight, 0.1, 1100 );
-  camera.position.set( 0, 100, 300);
+  camera.position.set( 0, 0.7, 2);
 
   scene = new THREE.Scene();
   scene.add( camera );
@@ -100,6 +100,8 @@ function viewScene(name) {
     cpos.copy(camera.position);
     crot.copy(camera.quaternion);
 
+    model.position.set(0, -0.5, -2)
+
     renderer.setClearColor(new THREE.Color(0x000), 1);
     gui_mesh.visible = true;
   });
@@ -109,6 +111,8 @@ function viewScene(name) {
     camera.position.copy(cpos);
     camera.quaternion.copy(crot);
     camera.fov = FOV;
+
+    model.position.set(0, 0, 0);
 
     renderer.setClearColor(new THREE.Color(0x000), 0);
     gui_mesh.visible = false;
@@ -148,12 +152,20 @@ export function loadModel(name)
     await renderer.compileAsync( model, camera, scene );
     model.name='model';
 
-    // TODO: Noprmalize by travers all meshes (as studio) ...
-    // var obj = scene.getObjectByName( 'Hill' );
-    // obj.geometry.computeBoundingSphere();
-    // model.position.set(0, 0, -obj.geometry.boundingSphere.radius * 1.5)
+    // Normalize model's scale
+    let bb = new THREE.Box3();
+    let bs = new THREE.Sphere();
+    model.traverse(function(node) {
+        if (node instanceof THREE.Mesh) {
+            // console.log("Found mesh:", node.name);
+            bb.expandByObject(node);
+        }
+    });
+    bb.getBoundingSphere(bs);
+    // console.log("R:", bs.radius);
+    const s = 1 / bs.radius;
+    model.scale.set(s, s, s);
 
-    model.position.set(0, -2, -7)
     scene.add( model );
     // gui.reset();
   });
