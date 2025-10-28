@@ -7,11 +7,11 @@
 //
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { HTMLMesh } from '/modules/interactive/HTMLMesh.js';
-import { InteractiveGroup } from '/modules/interactive/InteractiveGroup.js';
-import { GUI } from '/node_modules/lil-gui/dist/lil-gui.esm.min.js';
-import { XRControllerModelFactory } from '/modules/webxr/XRControllerModelFactory.js';
-import { VRButton } from '/modules/webxr/VRButton.js';
+import { HTMLMesh } from './modules/interactive/HTMLMesh.js';
+import { InteractiveGroup } from './modules/interactive/InteractiveGroup.js';
+import { GUI } from './node_modules/lil-gui/dist/lil-gui.esm.min.js';
+import { XRControllerModelFactory } from './modules/webxr/XRControllerModelFactory.js';
+import { VRButton } from './modules/webxr/VRButton.js';
 
 // View types
 const Type = Object.freeze({

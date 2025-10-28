@@ -20,15 +20,15 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="expires" content="timestamp">
 
-    <link type="text/css" rel="stylesheet" href="/index.css">
+    <link type="text/css" rel="stylesheet" href="./index.css">
   </head>
 
   <body>
   <script type="importmap"> { 
     "imports": {
-      "three": "/node_modules/three/build/three.module.js",
-      "three/addons/": "/node_modules/three/examples/jsm/",
-      "three/nodes": "/node_modules/three/examples/jsm/nodes/Nodes.js"
+      "three": "./node_modules/three/build/three.module.js",
+      "three/addons/": "./node_modules/three/examples/jsm/",
+      "three/nodes": "./node_modules/three/examples/jsm/nodes/Nodes.js"
       }
   }
   </script> 
@@ -62,7 +62,7 @@
   <script type="module" src="./viewScene.js"></script>
 
   <script>
-    fetch("/header.html")
+    fetch("./header.html")
       .then(response => {
         return response.text()
       }).then(data => {
@@ -70,6 +70,7 @@
       });
 
     function home() {
+      // window.location.href = "/gallery";
       window.location.href = "https://127.0.0.1:8085/";
     }
 

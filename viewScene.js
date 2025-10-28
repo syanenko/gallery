@@ -10,11 +10,11 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js"
-import { VRButton } from '/modules/webxr/VRButton.js';
-import { InteractiveGroup } from '/modules/interactive/InteractiveGroup.js';
-import { HTMLMesh } from '/modules/interactive/HTMLMesh.js';
-import { GUI } from '/node_modules/lil-gui/dist/lil-gui.esm.min.js';
-import { XRControllerModelFactory } from '/modules/webxr/XRControllerModelFactory.js';
+import { VRButton } from './modules/webxr/VRButton.js';
+import { InteractiveGroup } from './modules/interactive/InteractiveGroup.js';
+import { HTMLMesh } from './modules/interactive/HTMLMesh.js';
+import { GUI } from './node_modules/lil-gui/dist/lil-gui.esm.min.js';
+import { XRControllerModelFactory } from './modules/webxr/XRControllerModelFactory.js';
 
 const MODEL_PATH = 'data/models/';
 
@@ -43,8 +43,8 @@ const help = true;
 const params = {
   scale: 1.5,
   x:     0,
-  y:    -2,
-  z:    -7,
+  y:     0,
+  z:     0,
   rx:    0,
   ry:    0,
   rz:    0,
@@ -177,7 +177,7 @@ function initControls()
 {
   controls = new OrbitControls( camera, renderer.domElement );
   controls.target.set( params.x, params.y, params.z );
-  controls.enablePan = true;
+  controls.enablePan = false;
   controls.enableDamping = false;
   // Fix rotation to Y axis
   // controls.minPolarAngle=controls.maxPolarAngle=1.57079
