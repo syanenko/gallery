@@ -1,6 +1,5 @@
 // TODO
 // - Total cleanup on getting back to menu
-// - Normalize models
 // - Set FlatShading in userData
 // - Set position (y,z), GUI ranges, env. in userData (?)
 // - Set FlatShading in userData
@@ -67,7 +66,7 @@ let params = {
   speed: -0.003 }
 
 // View scene
-function viewModel(name, matFlat) {
+function viewModel(name) {
   // TODO: Display on return (?)
   //document.getElementById("__menu").style.display="none"; 
 
@@ -136,7 +135,7 @@ function viewModel(name, matFlat) {
   initControls();
   initGUI();  
   initController();
-  loadModel(name, matFlat);
+  loadModel(name);
 
   // Hilight controller
   const light = new THREE.PointLight( 0xffffff, 4, 0, 0);
@@ -153,7 +152,7 @@ function viewModel(name, matFlat) {
 window.viewModel = viewModel;
 
 // Load model
-export function loadModel(name, matFlat)
+export function loadModel(name)
 {
   const draco = new DRACOLoader()
   draco.setDecoderPath("/node_modules/three/examples/jsm/libs/draco/")
@@ -164,6 +163,10 @@ export function loadModel(name, matFlat)
     model = gltf.scene;
     await renderer.compileAsync( model, camera, scene );
     model.name='model';
+    let flat = false;
+    console.log(model.userData.flat);
+    if(model.userData.flat)
+      flat = true;
 
     // Normalize model's scale
     let bb = new THREE.Box3();
@@ -173,8 +176,8 @@ export function loadModel(name, matFlat)
         if (node instanceof THREE.Mesh) {
             // console.log("Found mesh:", node.name);
             bb.expandByObject(node);
-            node.material.flatShading = matFlat;
-            node.material.needsUpdate = matFlat;
+            node.material.flatShading = flat;
+            node.material.needsUpdate = flat;
 
             if(node.userData.animate != undefined)
               animate.push(node);
@@ -454,7 +457,7 @@ function render() {
     model.rotateZ(params.speed);
   }
 
-  // XR rotation
+  // XR - rotation
   if(rotate) {
     let dX = (rotX - controller.rotation.x) * rotK;
     let dY = (rotY - controller.rotation.y) * rotK;
@@ -470,8 +473,7 @@ function render() {
     }
   }
 
-  // XR menu display / position
-  let switched = false;
+  // XR - set model position
   const session = renderer.xr.getSession();
   if (session) {
     const inputSources = session.inputSources;
