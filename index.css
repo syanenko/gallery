@@ -11,7 +11,9 @@ html, body {
 	font-size: 13px;
 	line-height: 24px;
 	overscroll-behavior: none;
-   overflow-x: hidden; /* Hide horizontal scrollbar */
+  /* Hide scrollbars */
+  overflow-x: hidden; 
+  overflow-y: hidden;
 }
 
 a {

@@ -37,8 +37,10 @@ let controller;
 let directionalLight, pointLight, ambientLight;
 
 let model;
+const xrmpos = {"x":0, "y":-0.5, "z":-2 };
+let animate = [];
+
 const help = true;
-let animation = [];
 
 // GUI
 let params = {
@@ -84,8 +86,6 @@ function viewScene(name, matFlat) {
 
   // scene.background = new THREE.Color().setRGB( 0.5, 0.5, 0 );
 */
-
-
   renderer = new THREE.WebGLRenderer({ antialias: true, maxSamples: 4, alpha: true });
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
@@ -101,15 +101,9 @@ function viewScene(name, matFlat) {
     cpos.copy(camera.position);
     crot.copy(camera.quaternion);
 
-    params.y = -0.5,
-    params.z = -2,
-    model.position.set(0, params.y, params.z)
-    
-    for (var i in gui.controllers)
-      gui.controllers[i].updateDisplay();
-
     renderer.setClearColor(new THREE.Color(0x000), 1);
     gui.open();
+    onReset();
     // gui_mesh.visible = true;
   });
 
@@ -119,12 +113,9 @@ function viewScene(name, matFlat) {
     camera.quaternion.copy(crot);
     camera.fov = FOV;
 
-    params.y = 0,
-    params.z = 0,
-    model.position.set(0, params.y, params.z)
-
     renderer.setClearColor(new THREE.Color(0x000), 0);
     gui_mesh.visible = false;
+    onReset();
   });
 
   container = document.getElementById("container");
@@ -175,10 +166,9 @@ export function loadModel(name, matFlat)
             bb.expandByObject(node);
             node.material.flatShading = matFlat;
             node.material.needsUpdate = matFlat;
-            // Store animation on object
-            console.log(node.userData.animate);
+
             if(node.userData.animate != undefined)
-              animation.push(node);
+              animate.push(node);
         } else if (node instanceof THREE.Light) {
           node.target.position.set(0,0,0);
           scene.add(node.target);
@@ -200,7 +190,7 @@ export function loadModel(name, matFlat)
 function initControls()
 {
   controls = new OrbitControls( camera, renderer.domElement );
-  controls.target.set( 0, 0, 0 );
+  controls.target.set( 0, -0.1, -2 );
   controls.enablePan = false;
   controls.enableDamping = false;
   // Fix rotation to Y axis
@@ -341,8 +331,7 @@ function onSelectEnd( event )
   beam.material.color.set(beam_color);
   beam.material.emissive.g = 0;
 
-  if(param_changed)
-  {
+  if(param_changed) {
     param_changed = false;
     return;
   }
@@ -360,21 +349,25 @@ function onScale() {
 }
 
 function onX() {
-  if (typeof model == "undefined") { return; }
-  model.position.setX( params.x );
-  param_changed = true;
+  if (typeof model != "undefined") {
+    model.position.setX( params.x );
+    param_changed = true;
+  }
 }
 
 function onY() {
-  if (typeof model == "undefined") { return; }
-  model.position.setY( params.y );
-  param_changed = true;
+  if (typeof model != "undefined") {
+    model.position.setY( params.y );
+    param_changed = true;
+  }
 }
 
 function onZ() {
-  if (typeof model == "undefined") { return; }
-  model.position.setZ( params.z );
-  param_changed = true;
+  if (typeof model != "undefined") {
+    console.log(params.z);
+    model.position.setZ( params.z );
+    param_changed = true;
+  }
 }
 
 function onRotation()
@@ -388,13 +381,24 @@ function onRotation()
 function onReset()
 {
   controls.reset();
-  controls.target.set( params.x, params.y, params.z );
-  // controls.enablePan = true;
-  // controls.enableDamping = false;
+
+  if(renderer.xr.isPresenting) {
+    params.y = xrmpos.y;
+    params.z = xrmpos.z;
+  } else {
+    params.y = 0;
+    params.z = 0;
+  }
+
+  for (var i in gui.controllers) {
+    gui.controllers[i].updateDisplay();
+  }
+
+  if(model) {
+    model.position.set(params.x, params.y, params.z);
+  }
 
   // Y-rotation
-  // params.any = true;
-  // gui.controllers[1].$name.style.color = "#00ff00";
   params.any = false;
   gui.controllers[3].$name.style.color = "#ff9127";
   gui.controllers[5].$name.style.color = "#ff9127";
@@ -415,8 +419,9 @@ function onWindowResize() {
 // Render
 function render() {
   if (typeof model == "undefined") { return; }
-  controls.update();
+  // controls.update();
 
+  // Rotate camera
   if (params.anx) {
     model.rotateX(params.speed);
   }
@@ -429,15 +434,11 @@ function render() {
     model.rotateZ(params.speed);
   }
 
-  // Animate
-  for(let i=0; i<animation.length; i++) {
-    // console.log(animation[i].userData.animate.rotate.z);
-    animation[i].rotation.z += parseFloat(animation[i].userData.animate.rotate.z);
-    animation[i].rotation.z %= ( 2 * Math.PI);
+  // Animate model
+  for(let i=0; i<animate.length; i++) {
+    animate[i].rotation.z += parseFloat(animate[i].userData.animate.rotate.z);
+    animate[i].rotation.z %= (2 * Math.PI);
   }
-
-  //console.log(animation[0].userData.animate.rotate.y); // DEBUG
-  //console.log(animation[1].userData.animate.rotate.y); // DEBUG
 
   renderer.render( scene, camera );
 }
