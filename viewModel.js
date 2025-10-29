@@ -62,6 +62,9 @@ let params = {
 
 // View scene
 function viewModel(name, matFlat) {
+  // TODO: Display on return (?)
+  //document.getElementById("__menu").style.display="none"; 
+
   name += '.glb';
   camera = new THREE.PerspectiveCamera( FOV, window.innerWidth / window.innerHeight, 0.1, 1100 );
   camera.position.set( 0, 0.7, 2);

@@ -77,74 +77,30 @@
     function about() {
       document.getElementById("about").showModal();
     }
-
-    // View
-    function view(name, type, projection, matFlat) {
-      // TODO: Display on return
-      document.getElementById("__menu").style.display="none"; 
-
-      switch(type) {
-        case Type.IMAGE:
-          viewImage(name, projection); break;
-        case Type.SCENE:
-          viewModel(name, matFlat); break;
-        default:
-          console.error("Unknown view type");
-      }
-    }
   </script>
 
   <!-- Name, description hidden --> 
   <div id="name" style="display:none"></div>
   <div id="description" style="display:none"></div>
 
-  <!-- VRButton -->
-
-  <!-- <<
-  <img id='prev' class="nav" style="left: 50px" src="./data/icons/outline_arrow_circle_left_white_36dp.png" alt="Prev"
-                                                onclick="post > 1 ? showPost(--post): ()=>{}"
-                                                onmouseenter="style.opacity = '1.0'" 
-                                                onmouseleave="style.opacity = '0.5'"/>
-  -->
-  <!-- >>
-  <img id='next' class="nav" style="right: 50px" src="./data/icons/outline_arrow_circle_right_white_36dp.png" alt="Next"
-                                                 onclick="post < max_post ? showPost(++post): ()=>{}"
-                                                 onmouseenter="style.opacity = '1.0'" 
-                                                 onmouseleave="style.opacity = '0.6'"/>
-  -->
-
   <div id="container"></div>
   <div id="__menu">
-    <img id="flora"    src="data/images/flora_icon.png" alt='link' class='link' onclick='view(this.id, Type.SCENE, undefined, false)'>
-    <img id="oak_leaf" src="data/images/oak_leaf_icon.png" alt='link' class='link' onclick='view(this.id, Type.SCENE, undefined, false)'>
-    <img id="gears"    src="data/images/gears_icon.png" alt='link' class='link' onclick='view(this.id, Type.SCENE, undefined, true)'>
-    <img id="planetary3"    src="data/images/gears_icon.png" alt='link' class='link' onclick='view(this.id, Type.SCENE, undefined, true)'>
-    <img id="odsp1"    src="data/images/odsp_icon.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.CYLINDER)'>
+    <img id="m1" src="data/images/flora_icon.png"    alt='link' class='link' onclick='viewModel("flora", false)'>
+    <img id="m2" src="data/images/oak_leaf_icon.png" alt='link' class='link' onclick='viewModel("oak_leaf", false)'>
+    <img id="m3" src="data/images/gears_icon.png"    alt='link' class='link' onclick='viewModel("gears", true)'>
+    <img id="m4" src="data/images/gears_icon.png"    alt='link' class='link' onclick='viewModel("planetary3", true)'>
 
-<!--
-    <img id="gearbox5st"  src="data/images/oak_leaf_icon.png" alt='link' class='link' onclick='view(this.id, Type.SCENE, undefined, true)'>
-    <img id="sack"  src="data/images/oak_leaf_icon.png" alt='link' class='link' onclick='view(this.id, Type.SCENE, undefined, true)'>
+    <img id="i1"    src="data/images/odsp_icon.png" alt='link' class='link' onclick='viewImage("odsp1_left.png",
+                                                                                               "odsp2_left.png",
+                                                                                               Proj.CYLINDER)'>
 
-    <img id="odsp1"     src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.CYLINDER)'>
+    <img id="d2" src="data/images/dummy_icon.png" alt='link' class='link' onclick='viewImage("pb/Alley_Cylindrical/4m_zeroparallax_left.png",
+                                                                                              "pb/Alley_Cylindrical/4m_zeroparallax_right.png",
+                                                                                               Proj.CYLINDER)'>
 
-    <img id="surface_1" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.VR180)'>
-    <img id="surface_2" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.VR360)'>
-    <img id="surface_3" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.FLAT)'>
-    <img id="surface_4" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.FLAT)'>
-    <img id="surface_5" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, Type.IMAGE, Proj.FLAT)'>
-
-    <img id="Mars_Rover" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
-    <img id="Cassini-Huygens" src="data/images/surface_2.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
-    <img id="Deep_Space" src="data/images/surface_3.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
-    <img id="Ingenuity_Mars_Helicopter" src="data/images/surface_4.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
-    <img id="Viking_Lander" src="data/images/surface_5.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
-
-    <img id="ring_0" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
-    <img id="ring_2" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
-    <img id="ring_3" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
-    <img id="ring_4" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
-    <img id="gearbox5st" src="data/images/surface_1.png" alt='link' class='link' onclick='view(this.id, Type.SCENE)'>
--->
+    <img id="d1" src="data/images/dummy_icon.png" alt='link' class='link' onclick='viewImage("pb/HampiIndia_VR180_infinite_zeroparallax/PDB_3272_left.jpg",
+                                                                                             "pb/HampiIndia_VR180_infinite_zeroparallax/PDB_3272_right.jpg",
+                                                                                              Proj.VR180)'>
   </div>
 	</body>
 </html>

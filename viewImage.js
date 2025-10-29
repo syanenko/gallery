@@ -44,7 +44,7 @@ let param_changed = false;
 let geometry1, material1, mesh1;
 let geometry2, material2, mesh2;
 let params = { scale: 1,
-               rotate:  0 };
+               rotate:  180 };
 let textureLoader, texLeft, texRight;
 
 function onReset() {
@@ -55,7 +55,10 @@ function onReset() {
 //
 // View on screen
 //
-async function viewImage(name, proj) {
+async function viewImage(name_left, name_right, proj) {
+  // TODO: Display on return (?)
+  // document.getElementById("__menu").style.display="none"; 
+
   camera = new THREE.PerspectiveCamera( FOV, window.innerWidth / window.innerHeight, 0.1, 1000 );
   camera.layers.enable(1); // Render left view when no stereo available
   camera.position.set(0, 0, 1);
@@ -65,7 +68,7 @@ async function viewImage(name, proj) {
   textureLoader = new THREE.TextureLoader();
   material1 = new THREE.MeshBasicMaterial({side: THREE.DoubleSide});
   material2 = new THREE.MeshBasicMaterial({side: THREE.DoubleSide});
-  loadTextures(name);
+  loadTextures(name_left, name_right);
 
   // Environmant
   /*
@@ -158,11 +161,13 @@ async function viewImage(name, proj) {
 
   // GUI
   gui = new GUI( {width: 300, title:"Settings", closeFolders:false} );
-  gui.add( params, 'scale', 0.1, 2, 0.01 ).name( 'Scale' ).onChange(()=>{ mesh2.scale.set(params.scale, params.scale, params.scale);
+  gui.add( params, 'scale', 0.1, 10, 0.01 ).name( 'Scale' ).onChange(()=>{ mesh2.scale.set(params.scale, params.scale, params.scale);
                                                                           mesh1.scale.set(params.scale, params.scale, params.scale); 
                                                                           param_changed = true; });
-  gui.add( params, 'rotate',  0, 360, 1 ).name( 'Rotate'  ).onChange( ()=>{ const rad = THREE.MathUtils.degToRad(params.rotate);
-                                                                            mesh2.rotation.y = mesh1.rotation.y = -rad; param_changed = true; }); 
+  if((proj == Proj.VR360) || (proj == Proj.CYLINDER)) {
+    gui.add( params, 'rotate',  0, 360, 1 ).name( 'Rotate'  ).onChange( ()=>{ const rad = THREE.MathUtils.degToRad(params.rotate);
+                                                                              mesh2.rotation.y = mesh1.rotation.y = -rad; param_changed = true; });
+  }
 
   gui.add( gui.reset(), 'reset' ).name( 'Reset' ).onChange(onReset);
   gui.open();
@@ -230,9 +235,9 @@ async function viewImage(name, proj) {
 window.viewImage = viewImage;
 
 // Load textures
-function loadTextures(name) {
-  texLeft  = textureLoader.load('./data/images/' + name + '_left.png');
-  texRight = textureLoader.load('./data/images/' + name + '_right.png');
+function loadTextures(name_left, name_right) {
+  texLeft  = textureLoader.load('./data/images/' + name_left);
+  texRight = textureLoader.load('./data/images/' + name_right);
 
   texLeft.colorSpace = THREE.SRGBColorSpace;
   material1.map = texLeft;
