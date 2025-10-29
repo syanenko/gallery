@@ -179,9 +179,10 @@ export function loadModel(name, matFlat)
             if(node.userData.animate != undefined)
               animate.push(node);
         } else if (node instanceof THREE.Light) {
-          if(node.target)
+          if(node.target) {
             node.target.position.set(0,0,0);
-          scene.add(node.target);
+            scene.add(node.target);
+          }
           // scene.add( new THREE.DirectionalLightHelper( node, 5 ) ); // DEBUG
         }
     });
@@ -192,7 +193,6 @@ export function loadModel(name, matFlat)
 
     scene.add( model );
     // console.log(model);
-    // gui.reset();
   });
 }
 
@@ -229,7 +229,7 @@ function initGUI()
   const group = new InteractiveGroup( renderer, camera );
   scene.add( group );
 
-  // GUI position
+  // GUI mesh
   /*
   gui_mesh = new HTMLMesh( gui.domElement );
   gui_mesh.rotation.x = -Math.PI / 9;
@@ -480,13 +480,6 @@ function render() {
         const gamepad = source.gamepad;
         if (gamepad.axes.length > 1) {
           if (Math.abs(gamepad.axes[1]) > 0) {
-          //   if(!switched) {
-          //     gui_mesh.visible = !gui_mesh.visible;
-          //     switched = true;
-          //   }
-          // } else {
-          //   switched = false;
-          // }
             model.position.z = (params.z) - ((params.z) * gamepad.axes[1] );
           }
         }
