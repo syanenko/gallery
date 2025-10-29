@@ -4,3 +4,7 @@
 - Get back by Esc
 - Left, right margins for grid
 -
+
+-- Sources
+- https://paulbourke.net/transient/Sergey/
+-

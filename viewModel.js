@@ -61,7 +61,7 @@ let params = {
   speed: -0.003 }
 
 // View scene
-function viewScene(name, matFlat) {
+function viewModel(name, matFlat) {
   name += '.glb';
   camera = new THREE.PerspectiveCamera( FOV, window.innerWidth / window.innerHeight, 0.1, 1100 );
   camera.position.set( 0, 0.7, 2);
@@ -141,7 +141,7 @@ function viewScene(name, matFlat) {
 
   // displayAxis(true);
 }
-window.viewScene = viewScene;
+window.viewModel = viewModel;
 
 // Load model
 export function loadModel(name, matFlat)
@@ -422,7 +422,7 @@ function render() {
   if (typeof model == "undefined") { return; }
   // controls.update();
 
-  // Rotate camera
+  // Rotate whole model
   if (params.anx) {
     model.rotateX(params.speed);
   }

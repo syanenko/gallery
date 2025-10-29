@@ -59,7 +59,7 @@
   </dialog>
 
   <script type="module" src="./viewImage.js"></script>
-  <script type="module" src="./viewScene.js"></script>
+  <script type="module" src="./viewModel.js"></script>
 
   <script>
     fetch("./header.html")
@@ -71,7 +71,7 @@
 
     function home() {
       // window.location.href = "/gallery";
-      window.location.href = "https://127.0.0.1:8085/";
+      window.location.href = "https://127.0.0.1:8086/";
     }
 
     function about() {
@@ -81,13 +81,13 @@
     // View
     function view(name, type, projection, matFlat) {
       // TODO: Display on return
-      document.getElementById("__menu").style.display="none";
+      document.getElementById("__menu").style.display="none"; 
 
       switch(type) {
         case Type.IMAGE:
           viewImage(name, projection); break;
         case Type.SCENE:
-          viewScene(name, matFlat); break;
+          viewModel(name, matFlat); break;
         default:
           console.error("Unknown view type");
       }
