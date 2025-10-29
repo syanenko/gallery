@@ -32,12 +32,18 @@ let beam;
 const beam_color = 0xffffff;
 const beam_hilight_color = 0x222222;
 
+// Orbit controls
 let controls;
+
+// XR controller
 let controller;
-let directionalLight, pointLight, ambientLight;
+const rotTH = 0.005;
+const rotK = 3;
+let rotX, rotY;
+let rotate = false;
 
 let model;
-const xrmpos = {"x":0, "y":-0.5, "z":-2 };
+const modpos = {"x":0, "y":-0.5, "z":-2 };
 let animate = [];
 
 const help = true;
@@ -67,7 +73,7 @@ function viewModel(name, matFlat) {
 
   name += '.glb';
   camera = new THREE.PerspectiveCamera( FOV, window.innerWidth / window.innerHeight, 0.1, 1100 );
-  camera.position.set( 0, 0.7, 2);
+  camera.position.set( 0, -modpos.y, -modpos.z);
 
   scene = new THREE.Scene();
   scene.add( camera );
@@ -117,7 +123,7 @@ function viewModel(name, matFlat) {
     camera.fov = FOV;
 
     renderer.setClearColor(new THREE.Color(0x000), 0);
-    gui_mesh.visible = false;
+    // gui_mesh.visible = false;
     onReset();
   });
 
@@ -194,7 +200,7 @@ export function loadModel(name, matFlat)
 function initControls()
 {
   controls = new OrbitControls( camera, renderer.domElement );
-  controls.target.set( 0, -0.1, -2 );
+  controls.target.set( 0, modpos.y, modpos.z );
   controls.enablePan = false;
   controls.enableDamping = false;
   // Fix rotation to Y axis
@@ -208,8 +214,8 @@ function initGUI()
   gui = new GUI( {width: 300, title:"Settings", closeFolders:true} ); // Check 'closeFolders' - not working
   //gui.add( params, 'scale', 0.1, 5.0, 0.01 ).name( 'Scale' ).onChange(onScale);
   //gui.add( params, 'x', -500, 500, 0.01 ).name( 'X' ).onChange(onX);
-  gui.add( params, 'y', -1, 0, 0.01 ).name( 'Height' ).onChange(onY);
-  gui.add( params, 'z', -3, -1, 0.01 ).name( 'Distance' ).onChange(onZ);
+  gui.add( params, 'y', -1, 1, 0.01 ).name( 'Height' ).onChange(onY);
+  gui.add( params, 'z', -3, 3, 0.01 ).name( 'Distance' ).onChange(onZ);
   //gui.add( params, 'rx', -Math.PI, Math.PI, 0.01 ).name( 'Rot X' ).onChange( onRotation );
   //gui.add( params, 'ry', -Math.PI, Math.PI, 0.01 ).name( 'Rotate' ).onChange( onRotation );
   //gui.add( params, 'rz', -Math.PI, Math.PI, 0.01 ).name( 'Rot Z' ).onChange( onRotation );
@@ -226,6 +232,7 @@ function initGUI()
   scene.add( group );
 
   // GUI position
+  /*
   gui_mesh = new HTMLMesh( gui.domElement );
   gui_mesh.rotation.x = -Math.PI / 9;
   gui_mesh.position.y = -0.36;
@@ -233,6 +240,7 @@ function initGUI()
   
   group.add( gui_mesh );
   gui_mesh.visible = false;
+  */
 
   // params.switch_any(); // By default
   gui.close(); // Collapse by default
@@ -325,6 +333,10 @@ function onSelectStart( event )
   beam.material.emissive.g = 0.5;
 
   param_changed = false;
+
+  rotX = controller.rotation.x;
+  rotY = controller.rotation.y;
+  rotate = true;
 }
 
 function onSelectEnd( event )
@@ -340,7 +352,8 @@ function onSelectEnd( event )
     return;
   }
 
-  gui_mesh.visible = !gui_mesh.visible;
+  // gui_mesh.visible = !gui_mesh.visible; // DEBUG
+  rotate = false;
 }
 
 //
@@ -362,6 +375,7 @@ function onX() {
 function onY() {
   if (typeof model != "undefined") {
     model.position.setY( params.y );
+    controls.target.set( 0, model.position.y, model.position.z );
     param_changed = true;
   }
 }
@@ -370,6 +384,7 @@ function onZ() {
   if (typeof model != "undefined") {
     console.log(params.z);
     model.position.setZ( params.z );
+    controls.target.set( 0, model.position.y, model.position.z );
     param_changed = true;
   }
 }
@@ -387,8 +402,8 @@ function onReset()
   controls.reset();
 
   if(renderer.xr.isPresenting) {
-    params.y = xrmpos.y;
-    params.z = xrmpos.z;
+    params.y = modpos.y;
+    params.z = modpos.z;
   } else {
     params.y = 0;
     params.z = 0;
@@ -400,10 +415,11 @@ function onReset()
 
   if(model) {
     model.position.set(params.x, params.y, params.z);
+    controls.target.set( model.position.x, model.position.y, model.position.z );
   }
 
   // Y-rotation
-  params.any = false;
+  // params.any = false;
   gui.controllers[3].$name.style.color = "#ff9127";
   gui.controllers[5].$name.style.color = "#ff9127";
 
@@ -423,7 +439,7 @@ function onWindowResize() {
 // Render
 function render() {
   if (typeof model == "undefined") { return; }
-  // controls.update();
+  controls.update();
 
   // Rotate whole model
   if (params.anx) {
@@ -436,6 +452,46 @@ function render() {
 
   if (params.anz) {
     model.rotateZ(params.speed);
+  }
+
+  // XR rotation
+  if(rotate) {
+    let dX = (rotX - controller.rotation.x) * rotK;
+    let dY = (rotY - controller.rotation.y) * rotK;
+
+    if(Math.abs(dX) > rotTH) {
+      model.rotation.x += dX;
+      rotX = controller.rotation.x;
+    }
+
+    if(Math.abs(dY) > rotTH) {
+      model.rotation.y += dY;
+      rotY = controller.rotation.y;
+    }
+  }
+
+  // XR menu display / position
+  let switched = false;
+  const session = renderer.xr.getSession();
+  if (session) {
+    const inputSources = session.inputSources;
+    inputSources.forEach((source) => {
+      if (source.gamepad) {
+        const gamepad = source.gamepad;
+        if (gamepad.axes.length > 1) {
+          if (Math.abs(gamepad.axes[1]) > 0) {
+          //   if(!switched) {
+          //     gui_mesh.visible = !gui_mesh.visible;
+          //     switched = true;
+          //   }
+          // } else {
+          //   switched = false;
+          // }
+            model.position.z = (params.z) - ((params.z) * gamepad.axes[1] );
+          }
+        }
+      }
+    });
   }
 
   // Animate model
