@@ -170,7 +170,8 @@ export function loadModel(name, matFlat)
             if(node.userData.animate != undefined)
               animate.push(node);
         } else if (node instanceof THREE.Light) {
-          node.target.position.set(0,0,0);
+          if(node.target)
+            node.target.position.set(0,0,0);
           scene.add(node.target);
           // scene.add( new THREE.DirectionalLightHelper( node, 5 ) ); // DEBUG
         }
