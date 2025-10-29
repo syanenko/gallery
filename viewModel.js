@@ -62,7 +62,7 @@ let params = {
   anz: false,
   switch_any: function() { params.any = !params.any;
                            let color = params.any ? "#00ff00" : "#ff9127";
-                           gui.controllers[3].$name.style.color = color;
+                           gui.controllers[1].$name.style.color = color;
                            param_changed = true; },
   speed: -0.003 }
 
@@ -73,7 +73,7 @@ function viewModel(name, matFlat) {
 
   name += '.glb';
   camera = new THREE.PerspectiveCamera( FOV, window.innerWidth / window.innerHeight, 0.1, 1100 );
-  camera.position.set( 0, -modpos.y, -modpos.z);
+  camera.position.set( modpos.x, -modpos.y, -modpos.z);
 
   scene = new THREE.Scene();
   scene.add( camera );
@@ -200,11 +200,9 @@ export function loadModel(name, matFlat)
 function initControls()
 {
   controls = new OrbitControls( camera, renderer.domElement );
-  controls.target.set( 0, modpos.y, modpos.z );
+  controls.target.set( modpos.x, modpos.y, modpos.z );
   controls.enablePan = false;
   controls.enableDamping = false;
-  // Fix rotation to Y axis
-  // controls.minPolarAngle=controls.maxPolarAngle=1.57079
 }
 
 // Init GUI
@@ -214,8 +212,8 @@ function initGUI()
   gui = new GUI( {width: 300, title:"Settings", closeFolders:true} ); // Check 'closeFolders' - not working
   //gui.add( params, 'scale', 0.1, 5.0, 0.01 ).name( 'Scale' ).onChange(onScale);
   //gui.add( params, 'x', -500, 500, 0.01 ).name( 'X' ).onChange(onX);
-  gui.add( params, 'y', -1, 1, 0.01 ).name( 'Height' ).onChange(onY);
-  gui.add( params, 'z', -3, 3, 0.01 ).name( 'Distance' ).onChange(onZ);
+  //gui.add( params, 'y', -1, 1, 0.01 ).name( 'Height' ).onChange(onY);
+  //gui.add( params, 'z', -3, -modpos.z, 0.01 ).name( 'Distance' ).onChange(onZ);
   //gui.add( params, 'rx', -Math.PI, Math.PI, 0.01 ).name( 'Rot X' ).onChange( onRotation );
   //gui.add( params, 'ry', -Math.PI, Math.PI, 0.01 ).name( 'Rotate' ).onChange( onRotation );
   //gui.add( params, 'rz', -Math.PI, Math.PI, 0.01 ).name( 'Rot Z' ).onChange( onRotation );
@@ -225,7 +223,7 @@ function initGUI()
   //gui.add( params, 'switch_anx').name( 'Rotate X' );
   gui.add( params, 'switch_any').name( 'Rotate' );
   //gui.add( params, 'switch_anz').name( 'Rotate Z' );
-  gui.add( params, 'speed', -0.004, 0.004, 0.001 ).name( 'Speed' ).onChange( ()=>{param_changed = true;} );
+  gui.add( params, 'speed', -0.008, 0.008, 0.001 ).name( 'Speed' ).onChange( ()=>{param_changed = true;} );
   gui.add( gui.reset(), 'reset' ).name( 'Reset' ).onChange(onReset); onReset();
 
   const group = new InteractiveGroup( renderer, camera );
@@ -375,7 +373,7 @@ function onX() {
 function onY() {
   if (typeof model != "undefined") {
     model.position.setY( params.y );
-    controls.target.set( 0, model.position.y, model.position.z );
+    //controls.target.set( model.position.x, model.position.y, model.position.z );
     param_changed = true;
   }
 }
@@ -384,7 +382,7 @@ function onZ() {
   if (typeof model != "undefined") {
     console.log(params.z);
     model.position.setZ( params.z );
-    controls.target.set( 0, model.position.y, model.position.z );
+    //controls.target.set( model.position.x, model.position.y, model.position.z );
     param_changed = true;
   }
 }
@@ -402,9 +400,11 @@ function onReset()
   controls.reset();
 
   if(renderer.xr.isPresenting) {
+    params.x = modpos.x;
     params.y = modpos.y;
     params.z = modpos.z;
   } else {
+    params.x = 0;
     params.y = 0;
     params.z = 0;
   }
@@ -420,8 +420,8 @@ function onReset()
 
   // Y-rotation
   // params.any = false;
+  gui.controllers[1].$name.style.color = "#ff9127";
   gui.controllers[3].$name.style.color = "#ff9127";
-  gui.controllers[5].$name.style.color = "#ff9127";
 
   if (model) {
     const euler = new THREE.Euler( 0, 0, 0, 'XYZ' );
