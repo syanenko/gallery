@@ -20,7 +20,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="expires" content="timestamp">
 
-    <link rel="icon" href="favicon.ico" type="image/x-icon"
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link type="text/css" rel="stylesheet" href="./index.css">
   </head>
 
@@ -32,7 +32,16 @@
       "three/nodes": "./node_modules/three/examples/jsm/nodes/Nodes.js"
       }
   }
-  </script> 
+  </script>
+  <script>
+  // Back to menu
+  document.addEventListener("keyup", function(e){
+    console.log(e);
+    if(e.keyCode == 27 || e.keyCode == 32) {
+      window.location.href = '.';
+    }
+  })
+  </script>
 
   <!-- Header --> 
   <div id='header'></div>
