@@ -87,23 +87,14 @@ async function viewImage(name_left, name_right, proj) {
   scene.backgroundIntensity = 0.4;
   */
 
-/*
-  radius — sphere radius. Default is 1.
-  widthSegments — number of horizontal segments. Minimum value is 3, and the default is 32.
-  heightSegments — number of vertical segments. Minimum value is 2, and the default is 16.
-  phiStart — specify horizontal starting angle. Default is 0.
-  phiLength — specify horizontal sweep angle size. Default is Math.PI * 2.
-  thetaStart — specify vertical starting angle. Default is 0.
-  thetaLength — specify vertical sweep angle size. Default is Math.PI.
-*/
   switch(proj) {
     case Proj.FLAT: geometry1 = new THREE.PlaneGeometry( 2, 2 );
          break;
     case Proj.CYLINDER: geometry1 = new THREE.CylinderGeometry( 5, 5, 5, 512, 512, true );
          break;
-    case Proj.VR180: geometry1 = new THREE.SphereGeometry( 1, 64, 64, 0, Math.PI );
+    case Proj.VR180: geometry1 = new THREE.SphereGeometry( 10, 64, 64, 0, Math.PI );
          break;
-    case Proj.VR360: geometry1 = new THREE.SphereGeometry( 1, 64, 64, 0, Math.PI * 2 );
+    case Proj.VR360: geometry1 = new THREE.SphereGeometry( 10, 64, 64, 0, Math.PI * 2 );
          break;
   }
 
@@ -143,7 +134,7 @@ async function viewImage(name_left, name_right, proj) {
     crot.copy(camera.quaternion);
 
     gui.open();
-    gui_mesh.visible = true;
+    //gui_mesh.visible = true;
   });
 
   // XR end
@@ -161,7 +152,7 @@ async function viewImage(name_left, name_right, proj) {
 
   // GUI
   gui = new GUI( {width: 300, title:"Settings", closeFolders:false} );
-  gui.add( params, 'scale', 0.1, 10, 0.01 ).name( 'Scale' ).onChange(()=>{ mesh2.scale.set(params.scale, params.scale, params.scale);
+  gui.add( params, 'scale', 0.1, 5, 0.01 ).name( 'Scale' ).onChange(()=>{ mesh2.scale.set(params.scale, params.scale, params.scale);
                                                                           mesh1.scale.set(params.scale, params.scale, params.scale); 
                                                                           param_changed = true; });
   if((proj == Proj.VR360) || (proj == Proj.CYLINDER)) {
