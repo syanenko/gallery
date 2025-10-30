@@ -193,8 +193,12 @@ export async function loadModel(name)
 
   // Display stat
   let stat = document.getElementById("stat");
-  stat.style.display = "block";
+  vcount = new Intl.NumberFormat('no-NO', {
+    useGrouping: true,
+    groupingSeparator: ' '
+  }).format(vcount);
   stat.innerHTML = '"' + name + '" / ' + mcount+ " meshe(s) / " + vcount + " points";
+  stat.style.display = "block";
 }
 
 // Init orbit controlls
