@@ -67,9 +67,6 @@ let params = {
 
 // View scene
 function viewModel(name) {
-  // TODO: Display on return (?)
-  //document.getElementById("__menu").style.display="none"; 
-
   name += '.glb';
   camera = new THREE.PerspectiveCamera( FOV, window.innerWidth / window.innerHeight, 0.1, 1100 );
   camera.position.set( modpos.x, -modpos.y, -modpos.z);
@@ -193,10 +190,11 @@ export async function loadModel(name)
   model.scale.set(s, s, s);
 
   scene.add( model );
+
   // Display stat
   let stat = document.getElementById("stat");
   stat.style.display = "block";
-  stat.innerHTML = mcount+ " meshe(s) / " + vcount + " points";
+  stat.innerHTML = '"' + name + '" / ' + mcount+ " meshe(s) / " + vcount + " points";
 }
 
 // Init orbit controlls

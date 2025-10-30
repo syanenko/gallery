@@ -20,11 +20,12 @@ loadingManager.onStart = function (url, loaded, total) {
 };
 
 loadingManager.onProgress = function (url, loaded, total) {
-  /* console.log(`Progress: ${url}
+  /*
+  console.log(`Progress: ${url}
   number of items loaded: ${loaded}
   total number of items: ${total} `);
   */
-  progress.value = (loaded / total) * 100;
+  progress.value = (parseFloat(loaded) / parseFloat(total)) * 100.0;
 };
 
 loadingManager.onLoad = function () {
