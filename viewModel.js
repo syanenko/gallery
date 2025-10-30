@@ -7,8 +7,9 @@
 //
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js"
+//import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+//import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js"
+import { AsyncLoader } from './modules/AsyncLoader.js';
 import { VRButton } from './modules/webxr/VRButton.js';
 import { InteractiveGroup } from './modules/interactive/InteractiveGroup.js';
 import { HTMLMesh } from './modules/interactive/HTMLMesh.js';
@@ -152,51 +153,44 @@ function viewModel(name) {
 window.viewModel = viewModel;
 
 // Load model
-export function loadModel(name)
+export async function loadModel(name)
 {
-  const draco = new DRACOLoader()
-  draco.setDecoderPath("/node_modules/three/examples/jsm/libs/draco/")
-  const loader = new GLTFLoader();
-  loader.setPath( MODEL_PATH );
-  loader.setDRACOLoader(draco);
-  loader.load( name, async function ( gltf ) {
-    model = gltf.scene;
-    await renderer.compileAsync( model, camera, scene );
-    model.name='model';
-    let flat = false;
-    console.log(model.userData.flat);
-    if(model.userData.flat)
-      flat = true;
+  model = (await AsyncLoader.loadGLTFAsync(MODEL_PATH + name)).scene;
+  // console.log(model.userData);
 
-    // Normalize model's scale
-    let bb = new THREE.Box3();
-    let bs = new THREE.Sphere();
-    let first = true; // DEBUG
-    model.traverse(function(node) {
-        if (node instanceof THREE.Mesh) {
-            // console.log("Found mesh:", node.name);
-            bb.expandByObject(node);
-            node.material.flatShading = flat;
-            node.material.needsUpdate = flat;
+  await renderer.compileAsync( model, camera, scene );
+  model.name='model';
+  let flat = false;
+  if(model.userData.flat)
+    flat = true;
 
-            if(node.userData.animate != undefined)
-              animate.push(node);
-        } else if (node instanceof THREE.Light) {
-          if(node.target) {
-            node.target.position.set(0,0,0);
-            scene.add(node.target);
-          }
-          // scene.add( new THREE.DirectionalLightHelper( node, 5 ) ); // DEBUG
+  // Normalize model's scale
+  let bb = new THREE.Box3();
+  let bs = new THREE.Sphere();
+  let first = true; // DEBUG
+  model.traverse(function(node) {
+      if (node instanceof THREE.Mesh) {
+          // console.log("Found mesh:", node.name);
+          bb.expandByObject(node);
+          node.material.flatShading = flat;
+          node.material.needsUpdate = flat;
+
+          if(node.userData.animate != undefined)
+            animate.push(node);
+      } else if (node instanceof THREE.Light) {
+        if(node.target) {
+          node.target.position.set(0,0,0);
+          scene.add(node.target);
         }
-    });
-
-    bb.getBoundingSphere(bs);
-    const s = 1 / bs.radius;
-    model.scale.set(s, s, s);
-
-    scene.add( model );
-    // console.log(model);
+        // scene.add( new THREE.DirectionalLightHelper( node, 5 ) ); // DEBUG
+      }
   });
+
+  bb.getBoundingSphere(bs);
+  const s = 1 / bs.radius;
+  model.scale.set(s, s, s);
+
+  scene.add( model );
 }
 
 // Init orbit controlls

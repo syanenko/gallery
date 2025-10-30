@@ -1,10 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-
-// Prevent materials loading - get only geometry
-// import { OBJLoader }  from 'three/addons/loaders/OBJLoader.js';
 import { OBJLoader }  from './OBJLoader.js';
-
 import { FBXLoader }  from 'three/addons/loaders/FBXLoader.js';
 import { STLLoader }  from 'three/addons/loaders/STLLoader.js';
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js"
@@ -19,17 +15,15 @@ loadingManager.onStart = function (url, loaded, total) {
   // console.log('Loading process has started!');
   // Display it on upload button click
   progressContainer.style.display = 'flex';
-
   progress.value = 0;
-  progressLabel.innerHTML = "Parsing...";
+  progressLabel.innerHTML = "Loading ...";
 };
 
 loadingManager.onProgress = function (url, loaded, total) {
-/*
-  console.log(`Progress: ${url}
+  /* console.log(`Progress: ${url}
   number of items loaded: ${loaded}
   total number of items: ${total} `);
-*/
+  */
   progress.value = (loaded / total) * 100;
 };
 
