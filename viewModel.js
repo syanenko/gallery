@@ -7,14 +7,13 @@
 //
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-//import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-//import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js"
 import { AsyncLoader } from './modules/AsyncLoader.js';
-import { VRButton } from './modules/webxr/VRButton.js';
+import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 import { InteractiveGroup } from './modules/interactive/InteractiveGroup.js';
 import { HTMLMesh } from './modules/interactive/HTMLMesh.js';
 import { GUI } from './node_modules/lil-gui/dist/lil-gui.esm.min.js';
 import { XRControllerModelFactory } from './modules/webxr/XRControllerModelFactory.js';
+import { VRButton } from './modules/webxr/VRButton.js';
 
 const MODEL_PATH = 'data/models/';
 
@@ -167,16 +166,19 @@ export async function loadModel(name)
   // Normalize model's scale
   let bb = new THREE.Box3();
   let bs = new THREE.Sphere();
-  let first = true; // DEBUG
+  let mcount = 0, vcount = 0;
   model.traverse(function(node) {
       if (node instanceof THREE.Mesh) {
-          // console.log("Found mesh:", node.name);
-          bb.expandByObject(node);
-          node.material.flatShading = flat;
-          node.material.needsUpdate = flat;
+        bb.expandByObject(node);
+        node.material.flatShading = flat;
+        node.material.needsUpdate = flat;
 
-          if(node.userData.animate != undefined)
-            animate.push(node);
+        if(node.userData.animate != undefined)
+          animate.push(node);
+        
+        mcount++; // Stat
+        vcount += node.geometry.attributes.position.count;
+
       } else if (node instanceof THREE.Light) {
         if(node.target) {
           node.target.position.set(0,0,0);
@@ -191,6 +193,10 @@ export async function loadModel(name)
   model.scale.set(s, s, s);
 
   scene.add( model );
+  // Display stat
+  let stat = document.getElementById("stat");
+  stat.style.display = "block";
+  stat.innerHTML = mcount+ " meshe(s) / " + vcount + " points";
 }
 
 // Init orbit controlls
