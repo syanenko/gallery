@@ -138,7 +138,7 @@ function viewModel(name) {
   loadModel(name);
 
   // Hilight controller
-  const light = new THREE.PointLight( 0xffffff, 4, 0, 0);
+  const light = new THREE.PointLight( 0xffffff, 1.5, 0, 0);
   light.position.set( 40, 50, 20 );
   scene.add( light );
 
