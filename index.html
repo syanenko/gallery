@@ -20,6 +20,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="expires" content="timestamp">
 
+    <link rel="icon" href="favicon.ico" type="image/x-icon"
     <link type="text/css" rel="stylesheet" href="./index.css">
   </head>
 
@@ -69,11 +70,6 @@
         document.getElementById('header').innerHTML = data;
       });
 
-    function home() {
-      // window.location.href = "/gallery";
-      window.location.href = "https://127.0.0.1:8086/";
-    }
-
     function about() {
       document.getElementById("about").showModal();
     }
@@ -85,26 +81,25 @@
 
   <div id="container"></div>
   <div id="__menu">
-    <img id="m1" src="data/images/flora_icon.png"    alt='link' class='link' onclick='viewModel("flora")'>
-    <img id="m2" src="data/images/oak_leaf_icon.png" alt='link' class='link' onclick='viewModel("oak_leaf")'>
-    <img id="m3" src="data/images/gears_icon.png"    alt='link' class='link' onclick='viewModel("gears")'>
-    <img id="m4" src="data/images/gears_icon.png"    alt='link' class='link' onclick='viewModel("planetary3")'>
+    <img id="m1" src="./data/images/flora_icon.png"      alt='link' class='link' onclick='viewModel("flora")'>
+    <img id="m2" src="./data/images/oak_leaf_icon.png"   alt='link' class='link' onclick='viewModel("oak_leaf")'>
+    <img id="m3" src="./data/images/gears_icon.png"      alt='link' class='link' onclick='viewModel("gears")'>
+    <img id="m4" src="./data/images/planetary3_icon.png" alt='link' class='link' onclick='viewModel("planetary3")'>
 
-    <img id="i1"    src="data/images/odsp_icon.png" alt='link' class='link' onclick='viewImage("odsp1_left.png",
-                                                                                               "odsp2_left.png",
-                                                                                               Proj.CYLINDER)'>
+    <img id="p1"    src="./data/images/odsp_icon.png" alt='link' class='link' onclick='viewImage("odsp1_left.png",
+                                                                                                 "odsp2_left.png",
+                                                                                                  Proj.CYLINDER)'>
+ 
+    <img id="p2" src="./data/images/pb/HampiIndia_VR180_infinite_zeroparallax/PDB_3272_icon.png" alt='link' class='link'
+                 onclick='viewImage("pb/HampiIndia_VR180_infinite_zeroparallax/PDB_3272_left.jpg",
+                                    "pb/HampiIndia_VR180_infinite_zeroparallax/PDB_3272_right.jpg",
+                                     Proj.VR180)'>
 
-    <img id="d2" src="data/images/dummy_icon.png" alt='link' class='link' onclick='viewImage("pb/Alley_Cylindrical/4m_zeroparallax_left.png",
-                                                                                              "pb/Alley_Cylindrical/4m_zeroparallax_right.png",
-                                                                                               Proj.CYLINDER)'>
-
-    <img id="d1" src="data/images/dummy_icon.png" alt='link' class='link' onclick='viewImage("pb/HampiIndia_VR180_infinite_zeroparallax/PDB_3272_left.jpg",
-                                                                                             "pb/HampiIndia_VR180_infinite_zeroparallax/PDB_3272_right.jpg",
-                                                                                              Proj.VR180)'>
-
-    <img id="d1" src="data/images/dummy_icon.png" alt='link' class='link' onclick='viewImage("pb/HampiIndia_VR180_infinite_zeroparallax/PDB_3253_left.jpg",
-                                                                                             "pb/HampiIndia_VR180_infinite_zeroparallax/PDB_3253_right.jpg",
-                                                                                              Proj.VR180)'>
+    <img id="p3" src="./data/images/pb/HampiIndia_VR180_infinite_zeroparallax/PDB_3253_icon.png" alt='link' class='link'
+                 onclick='viewImage("pb/HampiIndia_VR180_infinite_zeroparallax/PDB_3253_left.jpg",
+                                    "pb/HampiIndia_VR180_infinite_zeroparallax/PDB_3253_right.jpg",
+                                     Proj.VR180)'>
   </div>
+  <a href="https://yesbird.online/" style="position:fixed; bottom: 10px; right: 20px; font-size: 120%; font-style: italic; color: #cccdce;">Yesbird studio 2025</a>
 	</body>
 </html>

@@ -99,10 +99,11 @@ a, button, input, select {
 #logo {
   display:inline;
   vertical-align:middle;
-  width:60px;
+  width:76px;
   height:60px;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 0px;
+  padding-right: 5px;
+  padding-bottom: 5px;
   cursor: pointer;
 }
 
@@ -132,7 +133,7 @@ a, button, input, select {
 
 #line {
   position:absolute;
-  top:50px;
+  top:52px;
   width: 100%;
 }
 

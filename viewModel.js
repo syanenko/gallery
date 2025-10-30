@@ -204,7 +204,7 @@ function initControls()
 {
   controls = new OrbitControls( camera, renderer.domElement );
   controls.target.set( modpos.x, modpos.y, modpos.z );
-  controls.enablePan = false;
+  controls.enablePan = true;
   controls.enableDamping = false;
 }
 
