@@ -71,17 +71,23 @@
   <script type="module" src="./viewImage.js"></script>
   <script type="module" src="./viewModel.js"></script>
 
-  <script>
-    fetch("./header.html")
-      .then(response => {
-        return response.text()
-      }).then(data => {
-        document.getElementById('header').innerHTML = data;
-      });
+  <header>
+    <div id='text' onclick="window.location.href = '.'"><img id='logo' src="./data/icons/vr.png" alt="Logo"/>Gallery 0.10b</div>
+    <button id="about_button" onclick="about()">About</button>
+    <hr id="line">
+  </header>
 
-    function about() {
-      document.getElementById("about").showModal();
-    }
+  <script>
+    // fetch("./header.html")
+    //   .then(response => {
+    //     return response.text()
+    //   }).then(data => {
+    //     document.getElementById('header').innerHTML = data;
+    //   });
+
+    // function about() {
+    //   document.getElementById("about").showModal();
+    // }
   </script>
 
   <!-- Name, description hidden -->
