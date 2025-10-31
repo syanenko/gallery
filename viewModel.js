@@ -168,8 +168,6 @@ export async function loadModel(name)
   model.traverse(async function(node) {
       if (node instanceof THREE.Mesh) {
         bb.expandByObject(node);
-        console.log(node.name);
-        console.log(node.userData);
 
         if(node.userData.matcap != undefined) {
           if(node.material) {
@@ -179,7 +177,6 @@ export async function loadModel(name)
             node.material.dispose();
           } 
           const mc = (await AsyncLoader.loadTextureAsync(MATERIALS_PATH + node.userData.matcap + ".png"));
-          console.log(MATERIALS_PATH + node.userData.matcap + ".png");
           mc.colorSpace = THREE.SRGBColorSpace;
           node.material = new THREE.MeshMatcapMaterial( {matcap: mc, side: THREE.DoubleSide} );
           node.material.needsUpdate = true;
