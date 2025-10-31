@@ -16,6 +16,7 @@ import { XRControllerModelFactory } from './modules/webxr/XRControllerModelFacto
 import { VRButton } from './modules/webxr/VRButton.js';
 
 const MODEL_PATH = 'data/models/';
+const MATERIALS_PATH = 'data/materials/';
 
 let container;
 let camera, cpmatrix, scene, renderer;
@@ -164,9 +165,23 @@ export async function loadModel(name)
   let bb = new THREE.Box3();
   let bs = new THREE.Sphere();
   let mcount = 0, vcount = 0;
-  model.traverse(function(node) {
+  model.traverse(async function(node) {
       if (node instanceof THREE.Mesh) {
         bb.expandByObject(node);
+
+        if(node.userData.matcap != undefined) {
+          if(node.material) {
+            if(node.material.matcap) {
+              node.material.matcap.dispose();
+            }
+            node.material.dispose();
+          } 
+          const mc = (await AsyncLoader.loadTextureAsync(MATERIALS_PATH + node.userData.matcap + ".png"));
+          mc.colorSpace = THREE.SRGBColorSpace;
+          node.material = new THREE.MeshMatcapMaterial( {matcap: mc, side: THREE.DoubleSide} );
+          node.material.needsUpdate = true;
+        }
+
         node.material.flatShading = flat;
         node.material.needsUpdate = flat;
 
