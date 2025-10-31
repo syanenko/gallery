@@ -8,7 +8,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { AsyncLoader } from './modules/AsyncLoader.js';
-import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 import { InteractiveGroup } from './modules/interactive/InteractiveGroup.js';
 import { HTMLMesh } from './modules/interactive/HTMLMesh.js';
 import { GUI } from './node_modules/lil-gui/dist/lil-gui.esm.min.js';
@@ -164,11 +163,13 @@ export async function loadModel(name)
   // Normalize model's scale
   let bb = new THREE.Box3();
   let bs = new THREE.Sphere();
-  let mcount = 0, vcount = 0;
-  model.traverse(async function(node) {
+
+  let mcount = 0, vcount = 0; // Stat
+  model.traverse(function(node) {
       if (node instanceof THREE.Mesh) {
         bb.expandByObject(node);
 
+        // Matcap
         if(node.userData.matcap != undefined) {
           if(node.material) {
             if(node.material.matcap) {
@@ -176,9 +177,10 @@ export async function loadModel(name)
             }
             node.material.dispose();
           } 
-          const mc = (await AsyncLoader.loadTextureAsync(MATERIALS_PATH + node.userData.matcap + ".png"));
+          const tl = new THREE.TextureLoader();
+          const mc = tl.load(MATERIALS_PATH + node.userData.matcap + ".png");
           mc.colorSpace = THREE.SRGBColorSpace;
-          node.material = new THREE.MeshMatcapMaterial( {matcap: mc, side: THREE.DoubleSide} );
+          node.material = new THREE.MeshMatcapMaterial( {matcap: mc, side: THREE.FrontSide } );
           node.material.needsUpdate = true;
         }
 
@@ -189,7 +191,7 @@ export async function loadModel(name)
           animate.push(node);
         
         mcount++; // Stat
-        vcount += node.geometry.attributes.position.count;
+        vcount += Math.floor(node.geometry.attributes.position.count);
 
       } else if (node instanceof THREE.Light) {
         if(node.target) {
@@ -203,15 +205,15 @@ export async function loadModel(name)
   bb.getBoundingSphere(bs);
   const s = 1 / bs.radius;
   model.scale.set(s, s, s);
-
   scene.add( model );
 
-  // Display stat
+  // Stat
   let stat = document.getElementById("stat");
   vcount = new Intl.NumberFormat('no-NO', {
     useGrouping: true,
     groupingSeparator: ' '
   }).format(vcount);
+
   stat.innerHTML = '"' + name + '" / ' + mcount+ " meshe(s) / " + vcount + " points";
   stat.style.display = "block";
 }
