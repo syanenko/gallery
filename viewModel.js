@@ -14,8 +14,9 @@ import { GUI } from './node_modules/lil-gui/dist/lil-gui.esm.min.js';
 import { XRControllerModelFactory } from './modules/webxr/XRControllerModelFactory.js';
 import { VRButton } from './modules/webxr/VRButton.js';
 
-const MODEL_PATH = 'data/models/';
-const MATERIALS_PATH = 'data/materials/';
+const MODEL_PATH = './data/models/';
+const MATERIALS_PATH = './data/materials/';
+const ENV_PATH = './data/textures/';
 
 let container;
 let camera, cpmatrix, scene, renderer;
@@ -66,7 +67,7 @@ let params = {
   speed: -0.003 }
 
 // View scene
-function viewModel(name) {
+function viewModel(name, env_name, rotate) {
   name += '.glb';
   camera = new THREE.PerspectiveCamera( FOV, window.innerWidth / window.innerHeight, 0.1, 1100 );
   camera.position.set( modpos.x, -modpos.y, -modpos.z);
@@ -75,22 +76,23 @@ function viewModel(name) {
   scene.add( camera );
 
   // Environmant
-/*
-  const envPath = "/data/textures/env/";
-  const env = new THREE.CubeTextureLoader().load([
-    envPath + "px.png",
-    envPath + "nx.png",
-    envPath + "py.png",
-    envPath + "ny.png",
-    envPath + "pz.png",
-    envPath + "nz.png",
-  ]);
-  env.colorSpace = THREE.SRGBColorSpace;
-  scene.background = env;
-  scene.backgroundIntensity = 0.4;
+  if(env_name) {
+    env_name = ENV_PATH + env_name + "/";
+    const env = new THREE.CubeTextureLoader().load([
+      env_name + "px.jpg",
+      env_name + "nx.jpg",
+      env_name + "py.jpg",
+      env_name + "ny.jpg",
+      env_name + "pz.jpg",
+      env_name + "nz.jpg",
+    ]);
 
+    env.colorSpace = THREE.SRGBColorSpace;
+    scene.background = env;
+    scene.backgroundIntensity = 0.4;
+  }
   // scene.background = new THREE.Color().setRGB( 0.5, 0.5, 0 );
-*/
+
   renderer = new THREE.WebGLRenderer({ antialias: true, maxSamples: 4, alpha: true });
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
@@ -143,6 +145,9 @@ function viewModel(name) {
   //vrb.style.setProperty('position', 'absolute');
   //vrb.style.setProperty('top', '10px');
   document.body.appendChild( vrb );
+ 
+  if(rotate)
+    params.switch_any();
 
   // displayAxis(true);
 }
